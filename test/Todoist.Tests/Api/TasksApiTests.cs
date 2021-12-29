@@ -9,7 +9,7 @@ using Xunit;
 using Todoist.Client;
 using Todoist.Api;
 // uncomment below to import models
-//using Todoist.Model;
+//using Todoist.Models;
 
 namespace Todoist.Test.Api
 {
