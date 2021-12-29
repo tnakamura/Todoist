@@ -1,0 +1,38 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todoist", "src\Todoist\Todoist.csproj", "{34175950-FC71-4022-8EAC-F30A35ACB02B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todoist.Test", "test\Todoist.Tests\Todoist.Test.csproj", "{19F1DEBC-DE5E-4517-8062-F000CD499087}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0459E263-7C30-4228-9F29-2A1CCD8583E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2BECC885-F5E6-4321-BBE8-A8367A7D7524}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{34175950-FC71-4022-8EAC-F30A35ACB02B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34175950-FC71-4022-8EAC-F30A35ACB02B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34175950-FC71-4022-8EAC-F30A35ACB02B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34175950-FC71-4022-8EAC-F30A35ACB02B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19F1DEBC-DE5E-4517-8062-F000CD499087}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19F1DEBC-DE5E-4517-8062-F000CD499087}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19F1DEBC-DE5E-4517-8062-F000CD499087}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19F1DEBC-DE5E-4517-8062-F000CD499087}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{34175950-FC71-4022-8EAC-F30A35ACB02B} = {0459E263-7C30-4228-9F29-2A1CCD8583E6}
+		{19F1DEBC-DE5E-4517-8062-F000CD499087} = {2BECC885-F5E6-4321-BBE8-A8367A7D7524}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B67AE2AE-E67F-4769-ABD2-FDE43861FC91}
+	EndGlobalSection
+EndGlobal
