@@ -1,25 +1,18 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Polly;
 
-[assembly:System.Runtime.CompilerServices.InternalsVisibleTo("Todoist.Test")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Todoist.Test")]
 
 namespace Todoist
 {
@@ -197,7 +190,7 @@ namespace Todoist.Client
 
         public async Task<T> Deserialize<T>(HttpResponseMessage response)
         {
-            var result = (T) await Deserialize(response, typeof(T));
+            var result = (T)await Deserialize(response, typeof(T));
             return result;
         }
 
@@ -373,7 +366,8 @@ namespace Todoist.Client
         /// </summary>
         public void Dispose()
         {
-            if(_disposeClient) {
+            if (_disposeClient)
+            {
                 _httpClient.Dispose();
             }
         }
@@ -510,7 +504,7 @@ namespace Todoist.Client
 
         private async Task<ApiResponse<T>> ToApiResponse<T>(HttpResponseMessage response, object responseData, Uri uri)
         {
-            T result = (T) responseData;
+            T result = (T)responseData;
             string rawContent = await response.Content.ReadAsStringAsync();
 
             var transformed = new ApiResponse<T>(response.StatusCode, new Multimap<string, string>(), result, rawContent)
@@ -539,13 +533,14 @@ namespace Todoist.Client
 
             if (_httpClientHandler != null && response != null)
             {
-                try {
+                try
+                {
                     foreach (Cookie cookie in _httpClientHandler.CookieContainer.GetCookies(uri))
                     {
                         transformed.Cookies.Add(cookie);
                     }
                 }
-                catch (PlatformNotSupportedException) {}
+                catch (PlatformNotSupportedException) { }
             }
 
             return transformed;
@@ -572,13 +567,13 @@ namespace Todoist.Client
 
             if (configuration.Proxy != null)
             {
-                if(_httpClientHandler == null) throw new InvalidOperationException("Configuration `Proxy` not supported when the client is explicitly created without an HttpClientHandler, use the proper constructor.");
+                if (_httpClientHandler == null) throw new InvalidOperationException("Configuration `Proxy` not supported when the client is explicitly created without an HttpClientHandler, use the proper constructor.");
                 _httpClientHandler.Proxy = configuration.Proxy;
             }
 
             if (configuration.ClientCertificates != null)
             {
-                if(_httpClientHandler == null) throw new InvalidOperationException("Configuration `ClientCertificates` not supported when the client is explicitly created without an HttpClientHandler, use the proper constructor.");
+                if (_httpClientHandler == null) throw new InvalidOperationException("Configuration `ClientCertificates` not supported when the client is explicitly created without an HttpClientHandler, use the proper constructor.");
                 _httpClientHandler.ClientCertificates.AddRange(configuration.ClientCertificates);
             }
 
@@ -586,7 +581,7 @@ namespace Todoist.Client
 
             if (cookieContainer != null)
             {
-                if(_httpClientHandler == null) throw new InvalidOperationException("Request property `CookieContainer` not supported when the client is explicitly created without an HttpClientHandler, use the proper constructor.");
+                if (_httpClientHandler == null) throw new InvalidOperationException("Request property `CookieContainer` not supported when the client is explicitly created without an HttpClientHandler, use the proper constructor.");
                 foreach (var cookie in cookieContainer)
                 {
                     _httpClientHandler.CookieContainer.Add(cookie);
@@ -595,24 +590,7 @@ namespace Todoist.Client
 
             InterceptRequest(req);
 
-            HttpResponseMessage response;
-            if (RetryConfiguration.AsyncRetryPolicy != null)
-            {
-                var policy = RetryConfiguration.AsyncRetryPolicy;
-                var policyResult = await policy
-                    .ExecuteAndCaptureAsync(() => _httpClient.SendAsync(req, cancellationToken))
-                    .ConfigureAwait(false);
-                response = (policyResult.Outcome == OutcomeType.Successful) ?
-                    policyResult.Result : new HttpResponseMessage()
-                    {
-                        ReasonPhrase = policyResult.FinalException.ToString(),
-                        RequestMessage = req
-                    };
-            }
-            else
-            {
-                response = await _httpClient.SendAsync(req, cancellationToken).ConfigureAwait(false);
-            }
+            var response = await _httpClient.SendAsync(req, cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -624,11 +602,11 @@ namespace Todoist.Client
             // if the response type is oneOf/anyOf, call FromJSON to deserialize the data
             if (typeof(Todoist.Models.AbstractOpenAPISchema).IsAssignableFrom(typeof(T)))
             {
-                responseData = (T) typeof(T).GetMethod("FromJson").Invoke(null, new object[] { response.Content });
+                responseData = (T)typeof(T).GetMethod("FromJson").Invoke(null, new object[] { response.Content });
             }
             else if (typeof(T).Name == "Stream") // for binary response
             {
-                responseData = (T) (object) await response.Content.ReadAsStreamAsync();
+                responseData = (T)(object)await response.Content.ReadAsStreamAsync();
             }
 
             InterceptResponse(req, response);
