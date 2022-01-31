@@ -177,15 +177,7 @@ namespace Todoist.Client
         /// <returns>A JSON string.</returns>
         public string Serialize(object obj)
         {
-            if (obj != null && obj is Todoist.Models.AbstractOpenAPISchema)
-            {
-                // the object to be serialized is an oneOf/anyOf schema
-                return ((Todoist.Models.AbstractOpenAPISchema)obj).ToJson();
-            }
-            else
-            {
-                return JsonConvert.SerializeObject(obj, _serializerSettings);
-            }
+            return JsonConvert.SerializeObject(obj, _serializerSettings);
         }
 
         public async Task<T> Deserialize<T>(HttpResponseMessage response)
@@ -599,12 +591,7 @@ namespace Todoist.Client
 
             object responseData = await deserializer.Deserialize<T>(response);
 
-            // if the response type is oneOf/anyOf, call FromJSON to deserialize the data
-            if (typeof(Todoist.Models.AbstractOpenAPISchema).IsAssignableFrom(typeof(T)))
-            {
-                responseData = (T)typeof(T).GetMethod("FromJson").Invoke(null, new object[] { response.Content });
-            }
-            else if (typeof(T).Name == "Stream") // for binary response
+            if (typeof(T).Name == "Stream") // for binary response
             {
                 responseData = (T)(object)await response.Content.ReadAsStreamAsync();
             }
