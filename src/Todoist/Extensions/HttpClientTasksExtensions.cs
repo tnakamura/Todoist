@@ -106,27 +106,6 @@ namespace Todoist
                 .ConfigureAwait(false);
         }
 
-        /// <inheritdoc cref="ITodoistApi.QuickAddTaskAsync"/>
-        public static async ValueTask<Models.Task> QuickAddTaskAsync(
-            this HttpMessageInvoker client,
-            QuickAddTaskArgs args,
-            CancellationToken cancellationToken = default)
-        {
-            var response = await client.PostAsync(
-                requestUri: $"",
-                payload: args,
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            var task = await response.DeserializeAsync<QuickAddTaskResponse>(cancellationToken)
-                .ConfigureAwait(false);
-            return new Models.Task(
-                id: task.Id,
-                projectId: task.ProjectId,
-                sectionId: task.SectionId ?? default,
-                content: task.Content,
-                description: task.Description);
-        }
-
         /// <inheritdoc cref="ITodoistApi.ReopenTaskAsync"/>
         public static async ValueTask<bool> ReopenTaskAsync(
             this HttpMessageInvoker client,

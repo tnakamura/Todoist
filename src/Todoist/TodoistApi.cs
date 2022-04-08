@@ -113,10 +113,6 @@ namespace Todoist
             _client.GetTasksAsync(args, cancellationToken);
 
         /// <inheritdoc/>
-        public ValueTask<Models.Task> QuickAddTaskAsync(QuickAddTaskArgs args, CancellationToken cancellationToken = default) =>
-            _client.QuickAddTaskAsync(args, cancellationToken);
-
-        /// <inheritdoc/>
         public ValueTask<bool> ReopenTaskAsync(long id, string requestId = null, CancellationToken cancellationToken = default) =>
             _client.ReopenTaskAsync(id, requestId, cancellationToken);
 

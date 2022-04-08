@@ -24,10 +24,6 @@ namespace Todoist
         /// </summary>
         ValueTask<TodoistTask> AddTaskAsync(AddTaskArgs args, string requestId = null, CancellationToken cancellationToken = default);
         /// <summary>
-        /// Add a new task quickly.
-        /// </summary>
-        ValueTask<TodoistTask> QuickAddTaskAsync(QuickAddTaskArgs args, CancellationToken cancellationToken = default);
-        /// <summary>
         /// Update a task
         /// </summary>
         ValueTask<bool> UpdateTaskAsync(long id, UpdateTaskArgs args, string requestId = null, CancellationToken cancellationToken = default);
