@@ -14,7 +14,7 @@ namespace Todoist.Test
     public class TasksApiTest
     {
         [Fact]
-        public async Task GetTasksAsyncTest()
+        public async Task GetAllAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -51,10 +51,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var tasks = await client.GetTasksAsync();
+            var tasks = await client.Tasks.GetAllAsync();
 
             Assert.Single(tasks);
             Assert.Equal(2995104339, tasks[0].Id);
@@ -73,7 +72,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task GetTaskAsyncTest()
+        public async Task GetAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -116,10 +115,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var task = await client.GetTaskAsync(2995104339);
+            var task = await client.Tasks.GetAsync(2995104339);
 
             Assert.Equal(2995104339, task.Id);
             Assert.Equal(2203306141, task.ProjectId);
@@ -143,7 +141,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task AddTaskAsyncTest()
+        public async Task CreateAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -188,11 +186,10 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var task = await client.AddTaskAsync(
-                new Models.AddTaskArgs(
+            var task = await client.Tasks.CreateAsync(
+                new Models.CreateTaskArgs(
                     content: "Buy Milk",
                     dueString: "tomorrow at 12:00",
                     dueLang: "en",
@@ -220,7 +217,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task UpdateTaskAsyncTest()
+        public async Task UpdateAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -239,10 +236,9 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var actual = await client.UpdateTaskAsync(
+            var actual = await client.Tasks.UpdateAsync(
                 2995104339,
                 new Models.UpdateTaskArgs(
                     content: "Buy Coffee"));
@@ -252,7 +248,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task DeleteTaskAsyncTest()
+        public async Task DeleteAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -270,17 +266,16 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var actual = await client.DeleteTaskAsync(2995104339);
+            var actual = await client.Tasks.DeleteAsync(2995104339);
 
             Assert.True(actual);
             handlerMock.VerifyAll();
         }
 
         [Fact]
-        public async Task CloseTaskAsyncTest()
+        public async Task CloseAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -298,17 +293,16 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var actual = await client.CloseTaskAsync(2995104339);
+            var actual = await client.Tasks.CloseAsync(2995104339);
 
             Assert.True(actual);
             handlerMock.VerifyAll();
         }
 
         [Fact]
-        public async Task ReopenTaskAsyncTest()
+        public async Task ReopenAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -326,10 +320,9 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var actual = await client.ReopenTaskAsync(2995104339);
+            var actual = await client.Tasks.ReopenAsync(2995104339);
 
             Assert.True(actual);
             handlerMock.VerifyAll();

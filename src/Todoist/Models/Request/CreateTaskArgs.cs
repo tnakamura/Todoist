@@ -7,10 +7,10 @@ namespace Todoist.Models
     /// <summary>
     /// NewTask
     /// </summary>
-    public class AddTaskArgs
+    public class CreateTaskArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddTaskArgs" /> class.
+        /// Initializes a new instance of the <see cref="CreateTaskArgs" /> class.
         /// </summary>
         /// <param name="content">content (required).</param>
         /// <param name="description">description.</param>
@@ -25,7 +25,7 @@ namespace Todoist.Models
         /// <param name="dueDatetime">dueDatetime.</param>
         /// <param name="dueLang">dueLang.</param>
         /// <param name="assignee">assignee.</param>
-        public AddTaskArgs(
+        public CreateTaskArgs(
             string content = default,
             string description = default,
             long? projectId = default,

@@ -13,7 +13,7 @@ namespace Todoist.Test
     public class LabelsApiTest
     {
         [Fact]
-        public async Task GetLabelsAsyncTest()
+        public async Task GetAllAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -43,10 +43,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var labels = await client.GetLabelsAsync();
+            var labels = await client.Labels.GetAllAsync();
 
             Assert.Single(labels);
             Assert.Equal(2156154810, labels[0].Id);
@@ -58,7 +57,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task GetLabelAsyncTest()
+        public async Task GetAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -86,10 +85,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var label = await client.GetLabelAsync(2156154810);
+            var label = await client.Labels.GetAsync(2156154810);
 
             Assert.Equal(2156154810, label.Id);
             Assert.Equal("Food", label.Name);
@@ -100,7 +98,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task AddLabelAsyncTest()
+        public async Task CreateAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -129,11 +127,10 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var label = await client.AddLabelAsync(
-                new Models.AddLabelArgs(
+            var label = await client.Labels.CreateAsync(
+                new Models.CreateLabelArgs(
                     name: "Food"));
 
             Assert.Equal(2156154810, label.Id);
@@ -145,7 +142,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task UpdateLabelAsyncTest()
+        public async Task UpdateAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -164,10 +161,9 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var actual = await client.UpdateLabelAsync(
+            var actual = await client.Labels.UpdateAsync(
                 2156154810,
                 new Models.UpdateLabelArgs(
                     name: "Drinks"));
@@ -177,7 +173,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task DeleteLabelAsyncTest()
+        public async Task DeleteAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -195,10 +191,9 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var actual = await client.DeleteLabelAsync(2156154810);
+            var actual = await client.Labels.DeleteAsync(2156154810);
 
             Assert.True(actual);
             handlerMock.VerifyAll();

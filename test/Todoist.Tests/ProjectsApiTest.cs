@@ -13,7 +13,7 @@ namespace Todoist.Test
     public class ProjectsApiTest
     {
         [Fact]
-        public async Task GetProjectsAsyncTest()
+        public async Task GetAllAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -49,10 +49,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var projects = await client.GetProjectsAsync();
+            var projects = await client.Projects.GetAllAsync();
 
             Assert.Single(projects);
             Assert.Equal(220474322, projects[0].Id);
@@ -70,7 +69,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task GetProjectAsyncTest()
+        public async Task GetAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -101,10 +100,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var project = await client.GetProjectAsync(2203306141);
+            var project = await client.Projects.GetAsync(2203306141);
 
             Assert.Equal(2203306141, project.Id);
             Assert.Equal("Shopping List", project.Name);
@@ -121,7 +119,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task DeleteProjectAsyncTest()
+        public async Task DeleteAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -139,17 +137,16 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var actual = await client.DeleteProjectAsync(2203306141);
+            var actual = await client.Projects.DeleteAsync(2203306141);
 
             Assert.True(actual);
             handlerMock.VerifyAll();
         }
 
         [Fact]
-        public async Task AddProjectAsyncTest()
+        public async Task CreateAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -182,11 +179,10 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var project = await client.AddProjectAsync(
-                new Models.AddProjectArgs(
+            var project = await client.Projects.CreateAsync(
+                new Models.CreateProjectArgs(
                     name: "Shopping List"));
 
             Assert.Equal(2203306141, project.Id);
@@ -204,7 +200,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task UpdateProjectAsyncTest()
+        public async Task UpdateAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -224,10 +220,9 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var actual = await client.UpdateProjectAsync(
+            var actual = await client.Projects.UpdateAsync(
                 2203306141,
                 new Models.UpdateProjectArgs(
                     name: "Things To Buy"));
@@ -237,7 +232,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task GetProjectCollaboratorsAsyncTest()
+        public async Task GetCollaboratorsAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -270,10 +265,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken",handlerMock.Object);
 
-            var users = await client.GetProjectCollaboratorsAsync(2203306141);
+            var users = await client.Projects.GetCollaboratorsAsync(2203306141);
 
             Assert.Equal(2, users.Count);
             Assert.Equal(2671362, users[0].Id);

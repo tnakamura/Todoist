@@ -14,7 +14,7 @@ namespace Todoist.Test
     public class CommentsApiTest
     {
         [Fact]
-        public async Task GetCommentsAsyncTest()
+        public async Task GetAllAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -49,10 +49,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var comments = await client.GetCommentsAsync(
+            var comments = await client.Comments.GetAllAsync(
                 new Models.GetTaskCommentsArgs(2995104339));
 
             Assert.Single(comments);
@@ -69,7 +68,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task GetCommentAsyncTest()
+        public async Task GetAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -102,10 +101,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var comment = await client.GetCommentAsync(2992679862);
+            var comment = await client.Comments.GetAsync(2992679862);
 
             Assert.Equal(2992679862, comment.Id);
             Assert.Equal(2995104339, comment.TaskId);
@@ -120,7 +118,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task AddCommentAsyncTest()
+        public async Task CreateAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -160,10 +158,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var comment = await client.AddCommentAsync(
+            var comment = await client.Comments.CreateAsync(
                 new Models.AddTaskCommentArgs(
                     content: "Need one bottle of milk",
                     taskId: 2995104339,
@@ -186,7 +183,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task UpdateCommentAsyncTest()
+        public async Task UpdateAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -205,10 +202,9 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var actual = await client.UpdateCommentAsync(
+            var actual = await client.Comments.UpdateAsync(
                 2992679862,
                 new Models.UpdateCommentArgs(
                     content: "Need two bottles of milk"));
@@ -218,7 +214,7 @@ namespace Todoist.Test
         }
 
         [Fact]
-        public async Task DeleteCommentAsyncTest()
+        public async Task DeleteAsyncTest()
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -236,10 +232,9 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var actual = await client.DeleteCommentAsync(2992679862);
+            var actual = await client.Comments.DeleteAsync(2992679862);
 
             Assert.True(actual);
             handlerMock.VerifyAll();

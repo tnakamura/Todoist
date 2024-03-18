@@ -6,15 +6,15 @@ namespace Todoist.Models
     /// <summary>
     /// NewSection
     /// </summary>
-    public class AddSectionArgs
+    public class CreateSectionArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddSectionArgs" /> class.
+        /// Initializes a new instance of the <see cref="CreateSectionArgs" /> class.
         /// </summary>
         /// <param name="name">name (required).</param>
         /// <param name="projectId">projectId (required).</param>
         /// <param name="order">order.</param>
-        public AddSectionArgs(string name, long projectId, int? order = default)
+        public CreateSectionArgs(string name, long projectId, int? order = default)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             ProjectId = projectId;

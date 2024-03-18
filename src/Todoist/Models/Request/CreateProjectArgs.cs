@@ -5,16 +5,16 @@ namespace Todoist.Models
     /// <summary>
     /// NewProject
     /// </summary>
-    public partial class AddProjectArgs
+    public partial class CreateProjectArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddProjectArgs" /> class.
+        /// Initializes a new instance of the <see cref="CreateProjectArgs" /> class.
         /// </summary>
         /// <param name="name">name.</param>
         /// <param name="parentId">parentId.</param>
         /// <param name="color">color.</param>
         /// <param name="favorite">favorite.</param>
-        public AddProjectArgs(
+        public CreateProjectArgs(
             string name,
             long? parentId = default,
             int? color = default,

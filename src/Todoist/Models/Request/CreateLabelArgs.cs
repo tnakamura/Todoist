@@ -6,16 +6,16 @@ namespace Todoist.Models
     /// <summary>
     /// NewLabel
     /// </summary>
-    public class AddLabelArgs
+    public class CreateLabelArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddLabelArgs" /> class.
+        /// Initializes a new instance of the <see cref="CreateLabelArgs" /> class.
         /// </summary>
         /// <param name="name">name (required).</param>
         /// <param name="order">order.</param>
         /// <param name="color">color.</param>
         /// <param name="favorite">favorite.</param>
-        public AddLabelArgs(
+        public CreateLabelArgs(
             string name,
             int? order = default,
             int? color = default,

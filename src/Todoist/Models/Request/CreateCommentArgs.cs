@@ -6,16 +6,16 @@ namespace Todoist.Models
     /// <summary>
     /// NewComment
     /// </summary>
-    public abstract class AddCommentArgs
+    public abstract class CreateCommentArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddCommentArgs" /> class.
+        /// Initializes a new instance of the <see cref="CreateCommentArgs" /> class.
         /// </summary>
         /// <param name="taskId">taskId.</param>
         /// <param name="projectId">projectId.</param>
         /// <param name="content">content (required).</param>
         /// <param name="attachment">attachment.</param>
-        private protected AddCommentArgs(
+        private protected CreateCommentArgs(
             string content,
             long? taskId = default,
             long? projectId = default,
@@ -55,7 +55,7 @@ namespace Todoist.Models
     /// <summary>
     /// New Task Comment
     /// </summary>
-    public sealed class AddTaskCommentArgs : AddCommentArgs
+    public sealed class AddTaskCommentArgs : CreateCommentArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AddTaskCommentArgs" /> class.
@@ -78,7 +78,7 @@ namespace Todoist.Models
     /// <summary>
     /// New Project Comment
     /// </summary>
-    public sealed class AddProjectCommentArgs : AddCommentArgs
+    public sealed class AddProjectCommentArgs : CreateCommentArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AddProjectCommentArgs" /> class.

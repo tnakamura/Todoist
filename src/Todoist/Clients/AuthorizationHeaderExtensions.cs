@@ -3,10 +3,7 @@ using System.Net.Http.Headers;
 
 namespace Todoist
 {
-    /// <summary>
-    /// Extensions for HttpRequestMessage
-    /// </summary>
-    public static class AuthorizationHeaderExtensions
+    internal static class AuthorizationHeaderExtensions
     {
         /// <summary>
         /// Sets an authorization header with a bearer token.
