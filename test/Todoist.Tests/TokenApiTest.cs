@@ -39,10 +39,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient(handlerMock.Object);
 
-            var response = await client.GetAuthTokenAsync(
+            var response = await client.AuthToken.GetAsync(
                 new Models.AuthTokenRequestArgs(
                     clientId: "0123456789abcdef",
                     clientSecret: "secret",
@@ -73,10 +72,9 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new HttpClient(handlerMock.Object);
-            client.SetBearerToken("TestToken");
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var actual = await client.RevokeAuthTokenAsync(
+            var actual = await client.AuthToken.RevokeAsync(
                 new Models.RevokeAuthTokenRequestArgs(
                     clientId: "0123456789abcdef",
                     clientSecret: "secret",

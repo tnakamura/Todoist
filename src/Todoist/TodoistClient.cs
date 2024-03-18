@@ -8,19 +8,28 @@ namespace Todoist
     public partial class TodoistClient :
         ITodoistClient
     {
-        private readonly string _accessToken;
-
         private readonly HttpClient _client;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TodoistClient"/> class.
+        /// </summary>
+        public TodoistClient(HttpMessageHandler handler = null)
+        {
+            _client = handler != null ? new HttpClient(handler) : new HttpClient();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TodoistClient"/> class.
         /// </summary>
         public TodoistClient(string accessToken, HttpMessageHandler handler = null)
         {
-            _accessToken = accessToken ?? throw new ArgumentNullException(nameof(accessToken));
+            if (accessToken is null) throw new ArgumentNullException(nameof(accessToken));
             _client = handler != null ? new HttpClient(handler) : new HttpClient();
-            _client.SetBearerToken(_accessToken);
+            _client.SetBearerToken(accessToken);
         }
+
+        /// <inheritdoc/>
+        public IAuthTokenClient AuthToken => this;
 
         /// <inheritdoc/>
         public ITasksClient Tasks => this;

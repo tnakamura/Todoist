@@ -8,6 +8,11 @@ namespace Todoist
     public interface ITodoistClient
     {
         /// <summary>
+        /// AuthToken
+        /// </summary>
+        IAuthTokenClient AuthToken { get; }
+
+        /// <summary>
         /// Tasks
         /// </summary>
         ITasksClient Tasks { get; }
