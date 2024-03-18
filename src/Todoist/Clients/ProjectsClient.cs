@@ -51,16 +51,6 @@ namespace Todoist
                 .ConfigureAwait(false);
         }
 
-        async ValueTask<IReadOnlyList<User>> IProjectsClient.GetCollaboratorsAsync(long projectId, CancellationToken cancellationToken)
-        {
-            var response = await _client.GetAsync(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_PROJECTS}/{projectId}/collaborators",
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return await response.DeserializeAsync<IReadOnlyList<User>>(cancellationToken)
-                .ConfigureAwait(false);
-        }
-
         async ValueTask<bool> IProjectsClient.UpdateAsync(long id, UpdateProjectArgs args, string requestId, CancellationToken cancellationToken)
         {
             var response = await _client.PostAsync(
@@ -71,5 +61,7 @@ namespace Todoist
                 .ConfigureAwait(false);
             return response.IsSuccessStatusCode;
         }
+
+        ICollaboratorsClient IProjectsClient.Collaborators => this;
     }
 }

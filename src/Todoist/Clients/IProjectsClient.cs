@@ -30,9 +30,10 @@ namespace Todoist.Clients
         /// Delete a project
         /// </summary>
         ValueTask<bool> DeleteAsync(long id, string requestId = null, CancellationToken cancellationToken = default);
+
         /// <summary>
-        /// Get all collaborators
+        /// Collaborators
         /// </summary>
-        ValueTask<IReadOnlyList<User>> GetCollaboratorsAsync(long projectId, CancellationToken cancellationToken = default);
+        ICollaboratorsClient Collaborators { get; }
     }
 }

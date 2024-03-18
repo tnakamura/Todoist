@@ -49,7 +49,7 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new TodoistClient("TestToken",handlerMock.Object);
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
             var projects = await client.Projects.GetAllAsync();
 
@@ -100,7 +100,7 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new TodoistClient("TestToken",handlerMock.Object);
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
             var project = await client.Projects.GetAsync(2203306141);
 
@@ -137,7 +137,7 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new TodoistClient("TestToken",handlerMock.Object);
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
             var actual = await client.Projects.DeleteAsync(2203306141);
 
@@ -179,7 +179,7 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new TodoistClient("TestToken",handlerMock.Object);
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
             var project = await client.Projects.CreateAsync(
                 new Models.CreateProjectArgs(
@@ -220,7 +220,7 @@ namespace Todoist.Test
                     var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                     return Task.FromResult(response);
                 });
-            var client = new TodoistClient("TestToken",handlerMock.Object);
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
             var actual = await client.Projects.UpdateAsync(
                 2203306141,
@@ -265,9 +265,9 @@ namespace Todoist.Test
                         mediaType: "application/json");
                     return Task.FromResult(response);
                 });
-            var client = new TodoistClient("TestToken",handlerMock.Object);
+            var client = new TodoistClient("TestToken", handlerMock.Object);
 
-            var users = await client.Projects.GetCollaboratorsAsync(2203306141);
+            var users = await client.Projects.Collaborators.GetAllAsync(2203306141);
 
             Assert.Equal(2, users.Count);
             Assert.Equal(2671362, users[0].Id);
