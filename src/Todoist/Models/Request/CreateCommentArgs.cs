@@ -19,7 +19,7 @@ namespace Todoist.Models
             string content,
             long? taskId = default,
             long? projectId = default,
-            Attachment attachment = default)
+            Attachment? attachment = default)
         {
             Content = content ?? throw new ArgumentNullException(nameof(content));
             TaskId = taskId;
@@ -49,7 +49,7 @@ namespace Todoist.Models
         /// Gets or Sets Attachment
         /// </summary>
         [JsonPropertyName("attachment")]
-        public Attachment Attachment { get; set; }
+        public Attachment? Attachment { get; set; }
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ namespace Todoist.Models
         public AddTaskCommentArgs(
             long taskId,
             string content,
-            Attachment attachment = default) :
+            Attachment? attachment = default) :
             base(
                 taskId: taskId,
                  content: content,
@@ -89,7 +89,7 @@ namespace Todoist.Models
         public AddProjectCommentArgs(
             long projectId,
             string content,
-            Attachment attachment = default) :
+            Attachment? attachment = default) :
             base(
                 projectId: projectId,
                 content: content,

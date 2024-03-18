@@ -26,18 +26,18 @@ namespace Todoist.Models
         /// <param name="dueLang">dueLang.</param>
         /// <param name="assignee">assignee.</param>
         public CreateTaskArgs(
-            string content = default,
-            string description = default,
+            string? content = default,
+            string? description = default,
             long? projectId = default,
             long? sectionId = default,
             long? parentId = default,
             int? order = default,
-            IList<long> labelIds = default,
+            IList<long>? labelIds = default,
             int? priority = default,
-            string dueString = default,
+            string? dueString = default,
             DateTimeOffset? dueDate = default,
             DateTimeOffset? dueDatetime = default,
-            string dueLang = default,
+            string? dueLang = default,
             long? assignee = default)
         {
             Content = content ?? throw new ArgumentNullException(nameof(content));
@@ -65,7 +65,7 @@ namespace Todoist.Models
         /// Gets or Sets Description
         /// </summary>
         [JsonPropertyName("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// Gets or Sets ProjectId
@@ -95,7 +95,7 @@ namespace Todoist.Models
         /// Gets or Sets LabelIds
         /// </summary>
         [JsonPropertyName("label_ids")]
-        public IList<long> LabelIds { get; set; }
+        public IList<long>? LabelIds { get; set; }
 
         /// <summary>
         /// Gets or Sets Priority
@@ -107,7 +107,7 @@ namespace Todoist.Models
         /// Gets or Sets DueString
         /// </summary>
         [JsonPropertyName("due_string")]
-        public string DueString { get; set; }
+        public string? DueString { get; set; }
 
         /// <summary>
         /// Gets or Sets DueDate
@@ -125,7 +125,7 @@ namespace Todoist.Models
         /// Gets or Sets DueLang
         /// </summary>
         [JsonPropertyName("due_lang")]
-        public string DueLang { get; set; }
+        public string? DueLang { get; set; }
 
         /// <summary>
         /// Gets or Sets Assignee

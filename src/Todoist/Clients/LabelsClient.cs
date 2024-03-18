@@ -5,61 +5,60 @@ using Todoist.Clients;
 using Todoist.Models;
 using static Todoist.Constants.Endpoints;
 
-namespace Todoist
+namespace Todoist;
+
+public partial class TodoistClient : ILabelsClient
 {
-    public partial class TodoistClient : ILabelsClient
+    async ValueTask<Label> ILabelsClient.CreateAsync(CreateLabelArgs args, string? requestId, CancellationToken cancellationToken)
     {
-        async ValueTask<Label> ILabelsClient.CreateAsync(CreateLabelArgs args, string requestId, CancellationToken cancellationToken)
-        {
-            var response = await _client.PostAsync(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}",
-                payload: args,
-                requestId: requestId,
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return await response.DeserializeAsync<Label>(cancellationToken)
-                .ConfigureAwait(false);
-        }
+        var response = await _client.PostAsync(
+            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}",
+            payload: args,
+            requestId: requestId,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializeAsync<Label>(cancellationToken)
+            .ConfigureAwait(false);
+    }
 
-        async ValueTask<bool> ILabelsClient.DeleteAsync(long id, string requestId, CancellationToken cancellationToken)
-        {
-            var response = await _client.DeleteAsync(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}/{id}",
-                requestId: requestId,
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return response.IsSuccessStatusCode;
-        }
+    async ValueTask<bool> ILabelsClient.DeleteAsync(long id, string? requestId, CancellationToken cancellationToken)
+    {
+        var response = await _client.DeleteAsync(
+            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}/{id}",
+            requestId: requestId,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return response.IsSuccessStatusCode;
+    }
 
-        async ValueTask<IReadOnlyList<Label>> ILabelsClient.GetAllAsync(CancellationToken cancellationToken)
-        {
-            var response = await _client.GetAsync(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}",
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return await response.DeserializeAsync<IReadOnlyList<Label>>(cancellationToken)
-                .ConfigureAwait(false);
-        }
+    async ValueTask<IReadOnlyList<Label>> ILabelsClient.GetAllAsync(CancellationToken cancellationToken)
+    {
+        var response = await _client.GetAsync(
+            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializeAsync<IReadOnlyList<Label>>(cancellationToken)
+            .ConfigureAwait(false);
+    }
 
-        async ValueTask<Label> ILabelsClient.GetAsync(long id, CancellationToken cancellationToken)
-        {
-            var response = await _client.GetAsync(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}/{id}",
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return await response.DeserializeAsync<Label>(cancellationToken)
-                .ConfigureAwait(false);
-        }
+    async ValueTask<Label> ILabelsClient.GetAsync(long id, CancellationToken cancellationToken)
+    {
+        var response = await _client.GetAsync(
+            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}/{id}",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializeAsync<Label>(cancellationToken)
+            .ConfigureAwait(false);
+    }
 
-        async ValueTask<bool> ILabelsClient.UpdateAsync(long id, UpdateLabelArgs args, string requestId, CancellationToken cancellationToken)
-        {
-            var response = await _client.PostAsync(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}/{id}",
-                payload: args,
-                requestId: requestId,
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return response.IsSuccessStatusCode;
-        }
+    async ValueTask<bool> ILabelsClient.UpdateAsync(long id, UpdateLabelArgs args, string? requestId, CancellationToken cancellationToken)
+    {
+        var response = await _client.PostAsync(
+            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}/{id}",
+            payload: args,
+            requestId: requestId,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return response.IsSuccessStatusCode;
     }
 }

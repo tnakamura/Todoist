@@ -13,18 +13,18 @@ namespace Todoist
         /// <summary>
         /// Initializes a new instance of the <see cref="TodoistClient"/> class.
         /// </summary>
-        public TodoistClient(HttpMessageHandler handler = null)
+        public TodoistClient(HttpMessageHandler? handler = null)
         {
-            _client = handler != null ? new HttpClient(handler) : new HttpClient();
+            _client = handler is not null ? new HttpClient(handler) : new HttpClient();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TodoistClient"/> class.
         /// </summary>
-        public TodoistClient(string accessToken, HttpMessageHandler handler = null)
+        public TodoistClient(string accessToken, HttpMessageHandler? handler = null)
         {
             if (accessToken is null) throw new ArgumentNullException(nameof(accessToken));
-            _client = handler != null ? new HttpClient(handler) : new HttpClient();
+            _client = handler is not null ? new HttpClient(handler) : new HttpClient();
             _client.SetBearerToken(accessToken);
         }
 

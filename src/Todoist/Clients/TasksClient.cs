@@ -6,100 +6,99 @@ using Todoist.Clients;
 using Todoist.Models;
 using static Todoist.Constants.Endpoints;
 
-namespace Todoist
+namespace Todoist;
+
+public partial class TodoistClient : ITasksClient
 {
-    public partial class TodoistClient : ITasksClient
+    async ValueTask<Models.Task> ITasksClient.CreateAsync(CreateTaskArgs args, string? requestId, CancellationToken cancellationToken)
     {
-        async ValueTask<Models.Task> ITasksClient.CreateAsync(CreateTaskArgs args, string requestId, CancellationToken cancellationToken)
-        {
-            var response = await _client.PostAsync(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}",
-                payload: args,
-                requestId: requestId,
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return await response.DeserializeAsync<Models.Task>(cancellationToken)
-                .ConfigureAwait(false);
-        }
+        var response = await _client.PostAsync(
+            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}",
+            payload: args,
+            requestId: requestId,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializeAsync<Models.Task>(cancellationToken)
+            .ConfigureAwait(false);
+    }
 
-        async ValueTask<bool> ITasksClient.CloseAsync(long id, string requestId, CancellationToken cancellationToken)
-        {
-            var response = await _client.PostAsync<object>(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}/{ENDPOINT_REST_TASK_CLOSE}",
-                payload: null,
-                requestId: requestId,
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return response.IsSuccessStatusCode;
-        }
+    async ValueTask<bool> ITasksClient.CloseAsync(long id, string? requestId, CancellationToken cancellationToken)
+    {
+        var response = await _client.PostAsync<object?>(
+            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}/{ENDPOINT_REST_TASK_CLOSE}",
+            payload: null,
+            requestId: requestId,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return response.IsSuccessStatusCode;
+    }
 
-        async ValueTask<bool> ITasksClient.DeleteAsync(long id, string requestId, CancellationToken cancellationToken)
-        {
-            var response = await _client.DeleteAsync(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
-                requestId: requestId,
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return response.IsSuccessStatusCode;
-        }
+    async ValueTask<bool> ITasksClient.DeleteAsync(long id, string? requestId, CancellationToken cancellationToken)
+    {
+        var response = await _client.DeleteAsync(
+            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
+            requestId: requestId,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return response.IsSuccessStatusCode;
+    }
 
-        async ValueTask<IReadOnlyList<Models.Task>> ITasksClient.GetAllAsync(GetTasksArgs args, CancellationToken cancellationToken)
+    async ValueTask<IReadOnlyList<Models.Task>> ITasksClient.GetAllAsync(GetTasksArgs? args, CancellationToken cancellationToken)
+    {
+        var requestUri = $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}";
+        if (args != null)
         {
-            var requestUri = $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}";
-            if (args != null)
-            {
-                var query = HttpUtility.ParseQueryString(string.Empty);
-                if (args.ProjectId != null)
-                    query.Add("project_id", args.ProjectId.Value.ToString());
-                if (args.SectionId != null)
-                    query.Add("section_id", args.SectionId.Value.ToString());
-                if (args.LabelId != null)
-                    query.Add("label_id", args.LabelId.Value.ToString());
-                if (args.Lang != null)
-                    query.Add("lang", args.Lang);
-                if (args.Filter != null)
-                    query.Add("filter", args.Filter);
-                if (query.HasKeys())
-                    requestUri += "?" + query.ToString();
-            }
-            var response = await _client.GetAsync(
-                requestUri: requestUri,
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return await response.DeserializeAsync<IReadOnlyList<Models.Task>>()
-                .ConfigureAwait(false);
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            if (args.ProjectId != null)
+                query.Add("project_id", args.ProjectId.Value.ToString());
+            if (args.SectionId != null)
+                query.Add("section_id", args.SectionId.Value.ToString());
+            if (args.LabelId != null)
+                query.Add("label_id", args.LabelId.Value.ToString());
+            if (args.Lang != null)
+                query.Add("lang", args.Lang);
+            if (args.Filter != null)
+                query.Add("filter", args.Filter);
+            if (query.HasKeys())
+                requestUri += "?" + query.ToString();
         }
+        var response = await _client.GetAsync(
+            requestUri: requestUri,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializeAsync<IReadOnlyList<Models.Task>>()
+            .ConfigureAwait(false);
+    }
 
-        async ValueTask<Models.Task> ITasksClient.GetAsync(long id, CancellationToken cancellationToken)
-        {
-            var response = await _client.GetAsync(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return await response.DeserializeAsync<Models.Task>(cancellationToken)
-                .ConfigureAwait(false);
-        }
+    async ValueTask<Models.Task> ITasksClient.GetAsync(long id, CancellationToken cancellationToken)
+    {
+        var response = await _client.GetAsync(
+            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializeAsync<Models.Task>(cancellationToken)
+            .ConfigureAwait(false);
+    }
 
-        async ValueTask<bool> ITasksClient.ReopenAsync(long id, string requestId, CancellationToken cancellationToken)
-        {
-            var response = await _client.PostAsync<object>(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}/{ENDPOINT_REST_TASK_REOPEN}",
-                payload: null,
-                requestId: requestId,
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return response.IsSuccessStatusCode;
-        }
+    async ValueTask<bool> ITasksClient.ReopenAsync(long id, string? requestId, CancellationToken cancellationToken)
+    {
+        var response = await _client.PostAsync<object?>(
+            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}/{ENDPOINT_REST_TASK_REOPEN}",
+            payload: null,
+            requestId: requestId,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return response.IsSuccessStatusCode;
+    }
 
-        async ValueTask<bool> ITasksClient.UpdateAsync(long id, UpdateTaskArgs args, string requestId, CancellationToken cancellationToken)
-        {
-            var response = await _client.PostAsync(
-                requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
-                payload: args,
-                requestId: requestId,
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return response.IsSuccessStatusCode;
-        }
+    async ValueTask<bool> ITasksClient.UpdateAsync(long id, UpdateTaskArgs args, string? requestId, CancellationToken cancellationToken)
+    {
+        var response = await _client.PostAsync(
+            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
+            payload: args,
+            requestId: requestId,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return response.IsSuccessStatusCode;
     }
 }
