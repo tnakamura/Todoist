@@ -1,40 +1,39 @@
 ﻿using Todoist.Clients;
 
-namespace Todoist
+namespace Todoist;
+
+/// <summary>
+/// Todoist REST API
+/// </summary>
+public interface ITodoistClient
 {
     /// <summary>
-    /// Todoist REST API
+    /// AuthToken
     /// </summary>
-    public interface ITodoistClient
-    {
-        /// <summary>
-        /// AuthToken
-        /// </summary>
-        IAuthTokenClient AuthToken { get; }
+    IAuthTokenClient AuthToken { get; }
 
-        /// <summary>
-        /// Tasks
-        /// </summary>
-        ITasksClient Tasks { get; }
+    /// <summary>
+    /// Tasks
+    /// </summary>
+    ITasksClient Tasks { get; }
 
-        /// <summary>
-        /// Projects
-        /// </summary>
-        IProjectsClient Projects { get; }
+    /// <summary>
+    /// Projects
+    /// </summary>
+    IProjectsClient Projects { get; }
 
-        /// <summary>
-        /// Sections
-        /// </summary>
-        ISectionsClient Sections { get; }
+    /// <summary>
+    /// Sections
+    /// </summary>
+    ISectionsClient Sections { get; }
 
-        /// <summary>
-        /// Labels
-        /// </summary>
-        ILabelsClient Labels { get; }
+    /// <summary>
+    /// Labels
+    /// </summary>
+    ILabelsClient Labels { get; }
 
-        /// <summary>
-        /// Comments
-        /// </summary>
-        ICommentsClient Comments { get; }
-    }
+    /// <summary>
+    /// Comments
+    /// </summary>
+    ICommentsClient Comments { get; }
 }
