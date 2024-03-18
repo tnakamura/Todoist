@@ -31,35 +31,35 @@ app.AddRootCommand(async (ConsoleAppContext ctx, IOptions<MyConfig> config) =>
     Console.Write("Code:");
     var code = Console.ReadLine();
 
-    var httpClient = new HttpClient();
-    var authToken = await httpClient.GetAuthTokenAsync(
+    var httpClient = new TodoistClient();
+    var authToken = await httpClient.AuthToken.GetAsync(
         new Todoist.Models.AuthTokenRequestArgs(
             clientId: config.Value.ClientId,
             clientSecret: config.Value.ClientSecret,
             code: code));
     Console.WriteLine($"AccessToken:{authToken.AccessToken}");
 
-    httpClient.SetBearerToken(authToken.AccessToken);
+    httpClient = new TodoistClient(authToken.AccessToken);
 
-    var projects = await httpClient.GetProjectsAsync();
+    var projects = await httpClient.Projects.GetAllAsync();
     foreach (var project in projects)
     {
         Console.WriteLine($"Project:{project.Name}");
     }
 
-    var sections = await httpClient.GetSectionsAsync();
+    var sections = await httpClient.Sections.GetAllAsync();
     foreach (var section in sections)
     {
         Console.WriteLine($"Section:{section.Name}");
     }
 
-    var labels = await httpClient.GetLabelsAsync();
+    var labels = await httpClient.Labels.GetAllAsync();
     foreach (var label in labels)
     {
         Console.WriteLine($"Label:{label.Name}");
     }
 
-    var tasks = await httpClient.GetTasksAsync();
+    var tasks = await httpClient.Tasks.GetAllAsync();
     foreach (var task in tasks)
     {
         Console.WriteLine($"Task:{task.Content}");
