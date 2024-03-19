@@ -15,15 +15,11 @@ Install-Package Todoist
 An example of initializing the API client and fetching a user's tasks:
 
 ```cs
-using Systen.Net.Http;
 using Todoist;
 
-const string token = "YOURTOKEN";
+var client = new TodoistClient("YOURTOKEN");
 
-var client = new HttpClient();
-client.SetBeareToken(token);
-
-var tasks = await client.GetTasksAsync();
+var tasks = await client.Tasks.GetAllAsync();
 
 foreach (var task in tasks)
 {
