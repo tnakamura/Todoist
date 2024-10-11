@@ -26,6 +26,7 @@ public partial class Task
     /// <param name="commentCount">commentCount.</param>
     /// <param name="assignee">assignee.</param>
     /// <param name="assigner">assigner.</param>
+    [JsonConstructor]
     public Task(
         long id = default,
         long projectId = default,

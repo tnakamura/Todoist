@@ -15,6 +15,7 @@ public partial class Section : IEquatable<Section>
     /// <param name="projectId">projectId.</param>
     /// <param name="order">order.</param>
     /// <param name="name">name.</param>
+    [JsonConstructor]
     public Section(
         int id = default,
         long projectId = default,

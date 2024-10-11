@@ -17,6 +17,7 @@ public partial class Comment : IEquatable<Comment>
     /// <param name="posted">posted.</param>
     /// <param name="content">content.</param>
     /// <param name="attachment">attachment.</param>
+    [JsonConstructor]
     public Comment(
         long id = default,
         long taskId = default,

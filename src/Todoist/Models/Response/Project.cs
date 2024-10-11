@@ -10,6 +10,7 @@ public partial class Project
     /// <summary>
     /// Initializes a new instance of the <see cref="Project" /> class.
     /// </summary>
+    [JsonConstructor]
     public Project(
         long id = default,
         string name = default,

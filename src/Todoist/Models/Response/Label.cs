@@ -16,6 +16,7 @@ public partial class Label : IEquatable<Label>
     /// <param name="color">color.</param>
     /// <param name="order">order.</param>
     /// <param name="favorite">favorite.</param>
+    [JsonConstructor]
     public Label(
         long id = default,
         string? name = default,

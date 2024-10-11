@@ -11,17 +11,12 @@ public partial class DueDate : IEquatable<DueDate>
     /// <summary>
     /// Initializes a new instance of the <see cref="DueDate" /> class.
     /// </summary>
-    [JsonConstructor]
-    protected DueDate() { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DueDate" /> class.
-    /// </summary>
     /// <param name="string">_string (required).</param>
     /// <param name="date">date (required).</param>
     /// <param name="recurring">recurring (required).</param>
     /// <param name="datetime">datetime.</param>
     /// <param name="timezone">timezone.</param>
+    [JsonConstructor]
     public DueDate(
         string? @string = default,
         DateTimeOffset date = default,

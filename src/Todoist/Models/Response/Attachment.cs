@@ -10,16 +10,11 @@ public class Attachment
     /// <summary>
     /// Initializes a new instance of the <see cref="Attachment" /> class.
     /// </summary>
-    [JsonConstructor]
-    protected Attachment() { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Attachment" /> class.
-    /// </summary>
     /// <param name="resourceType">resourceType.</param>
     /// <param name="fileUrl">fileUrl.</param>
     /// <param name="fileType">fileType.</param>
     /// <param name="fileName">fileName.</param>
+    [JsonConstructor]
     public Attachment(
         string? resourceType = default,
         string? fileUrl = default,

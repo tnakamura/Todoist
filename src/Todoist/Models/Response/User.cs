@@ -5,19 +5,15 @@ namespace Todoist.Models;
 /// <summary>
 /// User
 /// </summary>
-public partial class User 
+public partial class User
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="User" /> class.
-    /// </summary>
-    [JsonConstructor]
-    protected User() { }
     /// <summary>
     /// Initializes a new instance of the <see cref="User" /> class.
     /// </summary>
     /// <param name="id">id (required).</param>
     /// <param name="name">name.</param>
     /// <param name="email">email.</param>
+    [JsonConstructor]
     public User(
         long id = default,
         string name = default,

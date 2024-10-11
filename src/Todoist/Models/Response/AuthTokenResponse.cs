@@ -11,13 +11,6 @@ public class AuthTokenResponse
     /// Initializes a new instance of the <see cref="AuthTokenResponse" /> class.
     /// </summary>
     [JsonConstructor]
-#pragma warning disable CS8618
-    protected AuthTokenResponse() { }
-#pragma warning restore CS8618
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AuthTokenResponse" /> class.
-    /// </summary>
     public AuthTokenResponse(
         string accessToken,
         string tokenType)

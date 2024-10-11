@@ -2,9 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using NSubstitute;
 using Xunit;
 using static Todoist.Constants.Endpoints;
 
@@ -15,17 +13,17 @@ public class CommentsApiTest
     [Fact]
     public async Task GetAllAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_COMMENTS + "?task_id=2995104339") &&
-                r.Method == HttpMethod.Get &&
-                r.Headers.Authorization.Scheme == "Bearer" &&
-                r.Headers.Authorization.Parameter == "TestToken"
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
             {
+                Assert.Equal(HttpMethod.Get, r.Method);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+                Assert.Equal(
+                    API_REST_BASE_URI + ENDPOINT_REST_COMMENTS + "?task_id=2995104339",
+                    r.RequestUri?.AbsoluteUri);
+
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"[
@@ -44,8 +42,9 @@ public class CommentsApiTest
 ]",
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
-                return response;
-            });
+                return Task.FromResult(response);
+            },
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var comments = await client.Comments.GetAllAsync(
@@ -57,25 +56,24 @@ public class CommentsApiTest
         Assert.Equal("Need one bottle of milk", comments[0].Content);
         Assert.Equal(new DateTimeOffset(2016, 9, 22, 7, 0, 0, TimeSpan.Zero), comments[0].Posted);
         Assert.NotNull(comments[0].Attachment);
-        Assert.Equal("file", comments[0].Attachment.ResourceType);
-        Assert.Equal("https://cdn-domain.tld/path/to/file.pdf", comments[0].Attachment.FileUrl);
-        Assert.Equal("application/pdf", comments[0].Attachment.FileType);
-        Assert.Equal("File.pdf", comments[0].Attachment.FileName);
+        Assert.Equal("file", comments[0].Attachment?.ResourceType);
+        Assert.Equal("https://cdn-domain.tld/path/to/file.pdf", comments[0].Attachment?.FileUrl);
+        Assert.Equal("application/pdf", comments[0].Attachment?.FileType);
+        Assert.Equal("File.pdf", comments[0].Attachment?.FileName);
     }
 
     [Fact]
     public async Task GetAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_COMMENTS + "/2992679862") &&
-                r.Method == HttpMethod.Get &&
-                r.Headers.Authorization.Scheme == "Bearer" &&
-                r.Headers.Authorization.Parameter == "TestToken"),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
             {
+                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_COMMENTS + "/2992679862"), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Get, r.Method);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"{
@@ -92,8 +90,9 @@ public class CommentsApiTest
 }",
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
-                return response;
-            });
+                return Task.FromResult(response);
+            }
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var comment = await client.Comments.GetAsync(2992679862);
@@ -112,24 +111,23 @@ public class CommentsApiTest
     [Fact]
     public async Task CreateAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_COMMENTS) &&
-                r.Method == HttpMethod.Post &&
-                r.Headers.Authorization.Scheme == "Bearer" &&
-                r.Headers.Authorization.Parameter == "TestToken" &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"content\":\"Need one bottle of milk\"") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"task_id\":2995104339") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"attachment\":") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"resource_type\":\"file\"") &&
-                //r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"file_url\":\"https://s3.amazonaws.com/domorebetter/Todoist+Setup+Guide.pdf\"") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"file_type\":\"application/pdf\"") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"file_name\":\"File.pdf\"")
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = async (r, _) =>
             {
+                Assert.Equal(API_REST_BASE_URI + ENDPOINT_REST_COMMENTS, r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Post, r.Method);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+
+                var content = await r.Content!.ReadAsStringAsync();
+                Assert.Contains("\"content\":\"Need one bottle of milk\"", content);
+                Assert.Contains("\"task_id\":2995104339", content);
+                Assert.Contains("\"attachment\":", content);
+                Assert.Contains("\"resource_type\":\"file\"", content);
+                Assert.Contains("\"file_type\":\"application/pdf\"", content);
+                Assert.Contains("\"file_name\":\"File.pdf\"", content);
+
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"{
@@ -147,7 +145,8 @@ public class CommentsApiTest
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
                 return response;
-            });
+            },
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var comment = await client.Comments.CreateAsync(
@@ -174,21 +173,20 @@ public class CommentsApiTest
     [Fact]
     public async Task UpdateAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_COMMENTS + "/2992679862") &&
-                r.Method == HttpMethod.Post &&
-                r.Headers.Authorization.Scheme == "Bearer" &&
-                r.Headers.Authorization.Parameter == "TestToken" &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"content\":\"Need two bottles of milk\"")
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = async (r, _) =>
             {
+                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_COMMENTS + "/2992679862"), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Post, r.Method);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+                Assert.Contains("\"content\":\"Need two bottles of milk\"", await r.Content!.ReadAsStringAsync());
+
                 var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                 return response;
-            });
+            }
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var actual = await client.Comments.UpdateAsync(
@@ -202,20 +200,19 @@ public class CommentsApiTest
     [Fact]
     public async Task DeleteAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_COMMENTS + "/2992679862") &&
-                r.Method == HttpMethod.Delete &&
-                r.Headers.Authorization.Scheme == "Bearer" &&
-                r.Headers.Authorization.Parameter == "TestToken"
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
             {
+                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_COMMENTS + "/2992679862"), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Delete, r.Method);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+
                 var response = new HttpResponseMessage(HttpStatusCode.NoContent);
-                return response;
-            });
+                return Task.FromResult(response);
+            }
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var actual = await client.Comments.DeleteAsync(2992679862);
