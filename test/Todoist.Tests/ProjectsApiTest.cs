@@ -138,18 +138,16 @@ public class ProjectsApiTest
     [Fact]
     public async Task CreateAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-                Arg.Is<HttpRequestMessage>(r =>
-                    r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_PROJECTS) &&
-                    r.Method == HttpMethod.Post &&
-                    r.Headers.Authorization.Scheme == "Bearer" &&
-                    r.Headers.Authorization.Parameter == "TestToken" &&
-                    r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"name\":\"Shopping List\"")
-                ),
-                Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = async (r, _) =>
             {
+                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_PROJECTS), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Post, r.Method);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+                Assert.Contains("\"name\":\"Shopping List\"", await r.Content!.ReadAsStringAsync());
+
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"{
@@ -166,7 +164,8 @@ public class ProjectsApiTest
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
                 return response;
-            });
+            }
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var project = await client.Projects.CreateAsync(
