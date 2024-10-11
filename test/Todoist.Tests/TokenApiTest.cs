@@ -1,9 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using NSubstitute;
 using Xunit;
 using static Todoist.Constants.Endpoints;
 
@@ -14,18 +12,17 @@ public class TokenApiTest
     [Fact]
     public async Task GetAuthTokenAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_AUTHORIZATION_BASE_URI + ENDPOINT_GET_TOKEN) &&
-                r.Method == HttpMethod.Post &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("client_id=0123456789abcdef") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("client_secret=secret") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("code=abcdef")
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = async (r, _) =>
             {
+                Assert.Equal((API_AUTHORIZATION_BASE_URI + ENDPOINT_GET_TOKEN), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(r.Method, HttpMethod.Post);
+                var content = await r.Content!.ReadAsStringAsync();
+                Assert.Contains("client_id=0123456789abcdef", content);
+                Assert.Contains("client_secret=secret", content);
+                Assert.Contains("code=abcdef", content);
+
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"{
@@ -35,7 +32,8 @@ public class TokenApiTest
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
                 return response;
-            });
+            }
+        };
         var client = new TodoistClient(handlerMock);
 
         var response = await client.AuthToken.GetAsync(
@@ -51,21 +49,21 @@ public class TokenApiTest
     [Fact]
     public async Task RevokeAuthTokenAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_AUTHORIZATION_BASE_URI + ENDPOINT_REVOKE_TOKEN) &&
-                r.Method == HttpMethod.Post &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("client_id=0123456789abcdef") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("client_secret=secret") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("access_token=0123456789abcdef0123456789abcdef01234567")
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = async (r, _) =>
             {
+                Assert.Equal((API_AUTHORIZATION_BASE_URI + ENDPOINT_REVOKE_TOKEN), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Post, r.Method);
+                var content = await r.Content!.ReadAsStringAsync();
+                Assert.Contains("client_id=0123456789abcdef", content);
+                Assert.Contains("client_secret=secret", content);
+                Assert.Contains("access_token=0123456789abcdef0123456789abcdef01234567", content);
+
                 var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                 return response;
-            });
+            }
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var actual = await client.AuthToken.RevokeAsync(
