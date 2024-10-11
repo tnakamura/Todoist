@@ -2,9 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using NSubstitute;
 using Xunit;
 using static Todoist.Constants.Endpoints;
 
@@ -15,17 +13,15 @@ public class TasksApiTest
     [Fact]
     public async Task GetAllAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-                Arg.Is<HttpRequestMessage>(r =>
-                    r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_TASKS) &&
-                    r.Method == HttpMethod.Get &&
-                    r.Headers.Authorization.Scheme == "Bearer" &&
-                    r.Headers.Authorization.Parameter == "TestToken"
-                ),
-                Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
             {
+                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_TASKS), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Get, r.Method);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"[
@@ -46,8 +42,9 @@ public class TasksApiTest
 ]",
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
-                return response;
-            });
+                return Task.FromResult(response);
+            }
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var tasks = await client.Tasks.GetAllAsync();
@@ -70,17 +67,15 @@ public class TasksApiTest
     [Fact]
     public async Task GetAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_TASKS + "/2995104339") &&
-                r.Method == HttpMethod.Get &&
-                r.Headers.Authorization.Scheme == "Bearer" &&
-                r.Headers.Authorization.Parameter == "TestToken"
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
             {
+                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_TASKS + "/2995104339"), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(r.Method, HttpMethod.Get);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"{
@@ -107,8 +102,9 @@ public class TasksApiTest
 }",
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
-                return response;
-            });
+                return Task.FromResult(response);
+            }
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var task = await client.Tasks.GetAsync(2995104339);
@@ -136,21 +132,19 @@ public class TasksApiTest
     [Fact]
     public async Task CreateAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_TASKS) &&
-                r.Method == HttpMethod.Post &&
-                r.Headers.Authorization.Scheme == "Bearer" &&
-                r.Headers.Authorization.Parameter == "TestToken" &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"content\":\"Buy Milk\"") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"due_string\":\"tomorrow at 12:00\"") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"due_lang\":\"en\"") &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"priority\":4")
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = async (r, _) =>
             {
+                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_TASKS), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Post, r.Method);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+                Assert.Contains("\"content\":\"Buy Milk\"", await r.Content!.ReadAsStringAsync());
+                Assert.Contains("\"due_string\":\"tomorrow at 12:00\"", await r.Content.ReadAsStringAsync());
+                Assert.Contains("\"due_lang\":\"en\"", await r.Content.ReadAsStringAsync());
+                Assert.Contains("\"priority\":4", await r.Content.ReadAsStringAsync());
+
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"{
@@ -176,7 +170,8 @@ public class TasksApiTest
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
                 return response;
-            });
+            }
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var task = await client.Tasks.CreateAsync(
@@ -209,21 +204,20 @@ public class TasksApiTest
     [Fact]
     public async Task UpdateAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_TASKS + "/2995104339") &&
-                r.Method == HttpMethod.Post &&
-                r.Headers.Authorization.Scheme == "Bearer" &&
-                r.Headers.Authorization.Parameter == "TestToken" &&
-                r.Content.ReadAsStringAsync().GetAwaiter().GetResult().Contains("\"content\":\"Buy Coffee\"")
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = async (r, _) =>
             {
+                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_TASKS + "/2995104339"), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Post, r.Method);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+                Assert.Contains("\"content\":\"Buy Coffee\"", await r.Content!.ReadAsStringAsync());
+
                 var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                 return response;
-            });
+            }
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var actual = await client.Tasks.UpdateAsync(
@@ -237,20 +231,19 @@ public class TasksApiTest
     [Fact]
     public async Task DeleteAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_TASKS + "/2995104339") &&
-                r.Method == HttpMethod.Delete &&
-                r.Headers.Authorization.Scheme == "Bearer" &&
-                r.Headers.Authorization.Parameter == "TestToken"
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
             {
+                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_TASKS + "/2995104339"), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(r.Method, HttpMethod.Delete);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+
                 var response = new HttpResponseMessage(HttpStatusCode.NoContent);
-                return response;
-            });
+                return Task.FromResult(response);
+            }
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var actual = await client.Tasks.DeleteAsync(2995104339);
@@ -261,20 +254,19 @@ public class TasksApiTest
     [Fact]
     public async Task CloseAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_TASKS + "/2995104339/" + ENDPOINT_REST_TASK_CLOSE) &&
-                r.Method == HttpMethod.Post &&
-                r.Headers.Authorization.Scheme == "Bearer" &&
-                r.Headers.Authorization.Parameter == "TestToken"
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = async (r, _) =>
             {
+                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_TASKS + "/2995104339/" + ENDPOINT_REST_TASK_CLOSE), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(r.Method, HttpMethod.Post);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+
                 var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                 return response;
-            });
+            },
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var actual = await client.Tasks.CloseAsync(2995104339);
@@ -285,20 +277,19 @@ public class TasksApiTest
     [Fact]
     public async Task ReopenAsyncTest()
     {
-        var handlerMock = Substitute.For<MockHttpMessageHandler>();
-        handlerMock.MockSend(
-            Arg.Is<HttpRequestMessage>(r =>
-                r.RequestUri.AbsoluteUri == (API_REST_BASE_URI + ENDPOINT_REST_TASKS + "/2995104339/" + ENDPOINT_REST_TASK_REOPEN) &&
-                r.Method == HttpMethod.Post &&
-                r.Headers.Authorization.Scheme == "Bearer" &&
-                r.Headers.Authorization.Parameter == "TestToken"
-            ),
-            Arg.Any<CancellationToken>())
-            .Returns(_ =>
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
             {
+                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_TASKS + "/2995104339/" + ENDPOINT_REST_TASK_REOPEN), r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Post, r.Method);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+
                 var response = new HttpResponseMessage(HttpStatusCode.NoContent);
-                return response;
-            });
+                return Task.FromResult(response);
+            }
+        };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var actual = await client.Tasks.ReopenAsync(2995104339);
