@@ -10,44 +10,41 @@ namespace Todoist.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="UpdateLabelArgs" /> class.
         /// </summary>
-        /// <param name="name">name.</param>
-        /// <param name="order">order.</param>
-        /// <param name="color">color.</param>
-        /// <param name="favorite">favorite.</param>
         public UpdateLabelArgs(
-            string name,
+            string? name = default,
             int? order = default,
-            int? color = default,
-            bool? favorite = default)
+            string? color = default,
+            bool? isFavorite = default)
         {
             Name = name;
             Order = order;
             Color = color;
-            Favorite = favorite;
+            IsFavorite = isFavorite;
         }
 
         /// <summary>
-        /// Gets or Sets Name
+        /// New name of the label.
         /// </summary>
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
-        /// Gets or Sets Order
+        /// Number that is used by clients to sort list of labels.
         /// </summary>
         [JsonPropertyName("order")]
         public int? Order { get; set; }
 
         /// <summary>
-        /// Gets or Sets Color
+        /// The color of the label icon.
+        /// Refer to the name column in the Colors guide for more info.
         /// </summary>
         [JsonPropertyName("color")]
-        public int? Color { get; set; }
+        public string? Color { get; set; }
 
         /// <summary>
-        /// Gets or Sets Favorite
+        /// Whether the label is a favorite (a true or false value).
         /// </summary>
-        [JsonPropertyName("favorite")]
-        public bool? Favorite { get; set; }
+        [JsonPropertyName("is_favorite")]
+        public bool? IsFavorite { get; set; }
     }
 }

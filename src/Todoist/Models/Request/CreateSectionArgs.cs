@@ -11,9 +11,6 @@ namespace Todoist.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateSectionArgs" /> class.
         /// </summary>
-        /// <param name="name">name (required).</param>
-        /// <param name="projectId">projectId (required).</param>
-        /// <param name="order">order.</param>
         public CreateSectionArgs(string name, string projectId, int? order = default)
         {
             Name = name;
@@ -22,19 +19,19 @@ namespace Todoist.Models
         }
 
         /// <summary>
-        /// Gets or Sets Name
+        /// Section name
         /// </summary>
         [JsonPropertyName("name")]
         public string Name { get; private set; }
 
         /// <summary>
-        /// Gets or Sets ProjectId
+        /// Project ID this section should belong to
         /// </summary>
         [JsonPropertyName("project_id")]
         public string ProjectId { get; private set; }
 
         /// <summary>
-        /// Gets or Sets Order
+        /// Order among other sections in a project
         /// </summary>
         [JsonPropertyName("order")]
         public int? Order { get; set; }

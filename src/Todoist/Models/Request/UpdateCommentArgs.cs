@@ -1,26 +1,26 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace Todoist.Models
+namespace Todoist.Models;
+
+/// <summary>
+/// CommentUpdate
+/// </summary>
+public class UpdateCommentArgs
 {
     /// <summary>
-    /// CommentUpdate
+    /// Initializes a new instance of the <see cref="UpdateCommentArgs" /> class.
     /// </summary>
-    public class UpdateCommentArgs
+    public UpdateCommentArgs(string content)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UpdateCommentArgs" /> class.
-        /// </summary>
-        /// <param name="content">content (required).</param>
-        public UpdateCommentArgs(string content)
-        {
-            Content = content ?? throw new ArgumentNullException(nameof(content));
-        }
-
-        /// <summary>
-        /// Gets Content
-        /// </summary>
-        [JsonPropertyName("content")]
-        public string Content { get; private set; }
+        Content = content ?? throw new ArgumentNullException(nameof(content));
     }
+
+    /// <summary>
+    /// New content for the comment.
+    /// This value may contain markdown-formatted text and hyperlinks.
+    /// Details on markdown support can be found in the Text Formatting article in the Help Center.
+    /// </summary>
+    [JsonPropertyName("content")]
+    public string Content { get; private set; }
 }

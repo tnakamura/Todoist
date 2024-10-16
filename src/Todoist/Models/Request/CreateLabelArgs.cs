@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json.Serialization;
 
 namespace Todoist.Models
@@ -11,44 +10,41 @@ namespace Todoist.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateLabelArgs" /> class.
         /// </summary>
-        /// <param name="name">name (required).</param>
-        /// <param name="order">order.</param>
-        /// <param name="color">color.</param>
-        /// <param name="favorite">favorite.</param>
         public CreateLabelArgs(
             string name,
             int? order = default,
-            int? color = default,
-            bool? favorite = default)
+            string? color = default,
+            bool? isFavorite = default)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name;
             Order = order;
             Color = color;
-            Favorite = favorite;
+            IsFavorite = isFavorite;
         }
 
         /// <summary>
-        /// Gets Name
+        /// Name of the label.
         /// </summary>
         [JsonPropertyName("name")]
         public string Name { get; private set; }
 
         /// <summary>
-        /// Gets or Sets Order
+        /// Label order.
         /// </summary>
         [JsonPropertyName("order")]
         public int? Order { get; set; }
 
         /// <summary>
-        /// Gets or Sets Color
+        /// The color of the label icon.
+        /// Refer to the name column in the Colors guide for more info.
         /// </summary>
         [JsonPropertyName("color")]
-        public int? Color { get; set; }
+        public string? Color { get; set; }
 
         /// <summary>
-        /// Gets or Sets Favorite
+        /// Whether the label is a favorite (a true or false value).
         /// </summary>
-        [JsonPropertyName("favorite")]
-        public bool? Favorite { get; set; }
+        [JsonPropertyName("is_favorite")]
+        public bool? IsFavorite { get; set; }
     }
 }

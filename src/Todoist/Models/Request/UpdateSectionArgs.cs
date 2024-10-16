@@ -18,7 +18,7 @@ namespace Todoist.Models
         }
 
         /// <summary>
-        /// Gets Name
+        /// Section name
         /// </summary>
         [JsonPropertyName("name")]
         public string Name { get; private set; }
