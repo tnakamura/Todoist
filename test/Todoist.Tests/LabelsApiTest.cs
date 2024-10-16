@@ -16,7 +16,7 @@ public class LabelsApiTest
         {
             SendDelegate = static (r, _) =>
             {
-                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_LABELS), r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/rest/v2/labels", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(r.Method, HttpMethod.Get);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -25,11 +25,11 @@ public class LabelsApiTest
                 response.Content = new StringContent(
                     content: @"[
     {
-        ""id"": 2156154810,
+        ""id"": ""2156154810"",
         ""name"": ""Food"",
-        ""color"": 47,
+        ""color"": ""charcoal"",
         ""order"": 1,
-        ""favorite"": false
+        ""is_favorite"": false
     }
 ]",
                     encoding: Encoding.UTF8,
@@ -42,11 +42,11 @@ public class LabelsApiTest
         var labels = await client.Labels.GetAllAsync();
 
         Assert.Single(labels);
-        Assert.Equal(2156154810, labels[0].Id);
+        Assert.Equal("2156154810", labels[0].Id);
         Assert.Equal("Food", labels[0].Name);
-        Assert.Equal(47, labels[0].Color);
+        Assert.Equal("charcoal", labels[0].Color);
         Assert.Equal(1, labels[0].Order);
-        Assert.False(labels[0].Favorite);
+        Assert.False(labels[0].IsFavorite);
     }
 
     [Fact]
@@ -56,7 +56,7 @@ public class LabelsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal(API_REST_BASE_URI + ENDPOINT_REST_LABELS + "/2156154810", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/rest/v2/labels/2156154810", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(r.Method, HttpMethod.Get);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -64,11 +64,11 @@ public class LabelsApiTest
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"{
-    ""id"": 2156154810,
+    ""id"": ""2156154810"",
     ""name"": ""Food"",
-    ""color"": 47,
+    ""color"": ""charcoal"",
     ""order"": 1,
-    ""favorite"": false
+    ""is_favorite"": false
 }",
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
@@ -77,13 +77,13 @@ public class LabelsApiTest
         };
         var client = new TodoistClient("TestToken", handlerMock);
 
-        var label = await client.Labels.GetAsync(2156154810);
+        var label = await client.Labels.GetAsync("2156154810");
 
-        Assert.Equal(2156154810, label.Id);
+        Assert.Equal("2156154810", label.Id);
         Assert.Equal("Food", label.Name);
-        Assert.Equal(47, label.Color);
+        Assert.Equal("charcoal", label.Color);
         Assert.Equal(1, label.Order);
-        Assert.False(label.Favorite);
+        Assert.False(label.IsFavorite);
     }
 
     [Fact]
@@ -93,7 +93,7 @@ public class LabelsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_LABELS), r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/rest/v2/labels", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -102,11 +102,11 @@ public class LabelsApiTest
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"{
-    ""id"": 2156154810,
+    ""id"": ""2156154810"",
     ""name"": ""Food"",
-    ""color"": 47,
+    ""color"": ""charcoal"",
     ""order"": 1,
-    ""favorite"": false
+    ""is_favorite"": false
 }",
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
@@ -119,11 +119,11 @@ public class LabelsApiTest
             new Models.CreateLabelArgs(
                 name: "Food"));
 
-        Assert.Equal(2156154810, label.Id);
+        Assert.Equal("2156154810", label.Id);
         Assert.Equal("Food", label.Name);
-        Assert.Equal(47, label.Color);
+        Assert.Equal("charcoal", label.Color);
         Assert.Equal(1, label.Order);
-        Assert.False(label.Favorite);
+        Assert.False(label.IsFavorite);
     }
 
     [Fact]
@@ -133,24 +133,38 @@ public class LabelsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_LABELS + "/2156154810"), r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/rest/v2/labels/2156154810", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
                 Assert.Contains("\"name\":\"Drinks\"", await r.Content!.ReadAsStringAsync());
 
                 var response = new HttpResponseMessage(HttpStatusCode.NoContent);
+                response.Content = new StringContent(
+                    content: @"{
+    ""id"": ""2156154810"",
+    ""name"": ""Drinks"",
+    ""color"": ""charcoal"",
+    ""order"": 1,
+    ""is_favorite"": false
+}",
+                    encoding: Encoding.UTF8,
+                    mediaType: "application/json");
                 return response;
             }
         };
         var client = new TodoistClient("TestToken", handlerMock);
 
-        var actual = await client.Labels.UpdateAsync(
-            2156154810,
+        var label = await client.Labels.UpdateAsync(
+            "2156154810",
             new Models.UpdateLabelArgs(
                 name: "Drinks"));
 
-        Assert.True(actual);
+        Assert.Equal("2156154810", label.Id);
+        Assert.Equal("Drinks", label.Name);
+        Assert.Equal("charcoal", label.Color);
+        Assert.Equal(1, label.Order);
+        Assert.False(label.IsFavorite);
     }
 
     [Fact]
@@ -160,7 +174,7 @@ public class LabelsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_LABELS + "/2156154810"), r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/rest/v2/labels/2156154810", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Delete, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -171,7 +185,7 @@ public class LabelsApiTest
         };
         var client = new TodoistClient("TestToken", handlerMock);
 
-        var actual = await client.Labels.DeleteAsync(2156154810);
+        var actual = await client.Labels.DeleteAsync("2156154810");
 
         Assert.True(actual);
     }
