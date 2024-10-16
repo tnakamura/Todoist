@@ -14,9 +14,9 @@ namespace Todoist.Models
         /// <param name="name">name (required).</param>
         /// <param name="projectId">projectId (required).</param>
         /// <param name="order">order.</param>
-        public CreateSectionArgs(string name, long projectId, int? order = default)
+        public CreateSectionArgs(string name, string projectId, int? order = default)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name;
             ProjectId = projectId;
             Order = order;
         }
@@ -31,7 +31,7 @@ namespace Todoist.Models
         /// Gets or Sets ProjectId
         /// </summary>
         [JsonPropertyName("project_id")]
-        public long ProjectId { get; private set; }
+        public string ProjectId { get; private set; }
 
         /// <summary>
         /// Gets or Sets Order

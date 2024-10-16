@@ -21,7 +21,7 @@ public partial class TodoistClient : ISectionsClient
             .ConfigureAwait(false);
     }
 
-    async ValueTask<bool> ISectionsClient.DeleteAsync(long id, string? requestId, CancellationToken cancellationToken)
+    async ValueTask<bool> ISectionsClient.DeleteAsync(string id, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.DeleteAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_SECTIONS}/{id}",
@@ -31,7 +31,7 @@ public partial class TodoistClient : ISectionsClient
         return response.IsSuccessStatusCode;
     }
 
-    async ValueTask<IReadOnlyList<Section>> ISectionsClient.GetAllAsync(long? projectId, CancellationToken cancellationToken)
+    async ValueTask<IReadOnlyList<Section>> ISectionsClient.GetAllAsync(string? projectId, CancellationToken cancellationToken)
     {
         var requestUri = $"{API_REST_BASE_URI}{ENDPOINT_REST_SECTIONS}";
         if (projectId != null)
@@ -46,7 +46,7 @@ public partial class TodoistClient : ISectionsClient
             .ConfigureAwait(!false);
     }
 
-    async ValueTask<Section> ISectionsClient.GetAsync(long id, CancellationToken cancellationToken)
+    async ValueTask<Section> ISectionsClient.GetAsync(string id, CancellationToken cancellationToken)
     {
         var response = await _client.GetAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_SECTIONS}/{id}",
@@ -56,7 +56,7 @@ public partial class TodoistClient : ISectionsClient
             .ConfigureAwait(false);
     }
 
-    async ValueTask<bool> ISectionsClient.UpdateAsync(long id, UpdateSectionArgs args, string? requestId, CancellationToken cancellationToken)
+    async ValueTask<Section> ISectionsClient.UpdateAsync(string id, UpdateSectionArgs args, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_SECTIONS}/{id}",
@@ -64,6 +64,7 @@ public partial class TodoistClient : ISectionsClient
             requestId: requestId,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        return response.IsSuccessStatusCode;
+        return await response.DeserializeAsync<Section>(cancellationToken)
+            .ConfigureAwait(false);
     }
 }

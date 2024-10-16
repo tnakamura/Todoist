@@ -11,16 +11,24 @@ public partial class Section : IEquatable<Section>
     /// <summary>
     /// Initializes a new instance of the <see cref="Section" /> class.
     /// </summary>
-    /// <param name="id">id.</param>
-    /// <param name="projectId">projectId.</param>
-    /// <param name="order">order.</param>
-    /// <param name="name">name.</param>
+    /// <param name="id">
+    /// Section id
+    /// </param>
+    /// <param name="projectId">
+    /// Section position among other sections from the same project
+    /// </param>
+    /// <param name="order">
+    /// Section position among other sections
+    /// </param>
+    /// <param name="name">
+    /// Section name
+    /// </param>
     [JsonConstructor]
     public Section(
-        int id = default,
-        long projectId = default,
-        int order = default,
-        string name = default)
+        string id,
+        string projectId,
+        int order,
+        string name)
     {
         Id = id;
         ProjectId = projectId;
@@ -29,25 +37,25 @@ public partial class Section : IEquatable<Section>
     }
 
     /// <summary>
-    /// Gets Id
+    /// Section id
     /// </summary>
     [JsonPropertyName("id")]
-    public int Id { get; private set; }
+    public string Id { get; private set; }
 
     /// <summary>
-    /// Gets ProjectId
+    /// Section position among other sections from the same project
     /// </summary>
     [JsonPropertyName("project_id")]
-    public long ProjectId { get; private set; }
+    public string ProjectId { get; private set; }
 
     /// <summary>
-    /// Gets Order
+    /// Section position among other sections
     /// </summary>
     [JsonPropertyName("order")]
     public int Order { get; private set; }
 
     /// <summary>
-    /// Gets Name
+    /// Section name
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; private set; }
@@ -67,7 +75,7 @@ public partial class Section : IEquatable<Section>
     /// </summary>
     /// <param name="input">Instance of Section to be compared</param>
     /// <returns>Boolean</returns>
-    public bool Equals(Section input)
+    public bool Equals(Section? input)
     {
         if (input == null)
         {

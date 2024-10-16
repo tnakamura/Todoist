@@ -13,11 +13,15 @@ public interface ISectionsClient
     /// <summary>
     /// Get all sections
     /// </summary>
-    ValueTask<IReadOnlyList<Section>> GetAllAsync(long? projectId = null, CancellationToken cancellationToken = default);
+    /// <param name="projectId">
+    /// Filter sections by project ID.
+    /// </param>
+    /// <param name="cancellationToken"></param>
+    ValueTask<IReadOnlyList<Section>> GetAllAsync(string? projectId = null, CancellationToken cancellationToken = default);
     /// <summary>
     /// Get a single section
     /// </summary>
-    ValueTask<Section> GetAsync(long id, CancellationToken cancellationToken = default);
+    ValueTask<Section> GetAsync(string id, CancellationToken cancellationToken = default);
     /// <summary>
     /// Create a new section
     /// </summary>
@@ -25,9 +29,9 @@ public interface ISectionsClient
     /// <summary>
     /// Update a section
     /// </summary>
-    ValueTask<bool> UpdateAsync(long id, UpdateSectionArgs args, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<Section> UpdateAsync(string id, UpdateSectionArgs args, string? requestId = null, CancellationToken cancellationToken = default);
     /// <summary>
     /// Delete a section
     /// </summary>
-    ValueTask<bool> DeleteAsync(long id, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<bool> DeleteAsync(string id, string? requestId = null, CancellationToken cancellationToken = default);
 }
