@@ -12,18 +12,18 @@ public partial class Project
     /// </summary>
     [JsonConstructor]
     public Project(
-        string id = default,
-        string name = default,
-        int commentCount = default,
-        int order = default,
-        string color = default,
-        bool isShared = default,
-        bool isFavorite = default,
-        bool isInboxProject = default,
-        bool isTeamInbox = default,
-        string url = default,
-        string? parentId = default,
-        string viewStyle = default)
+        string id,
+        string name,
+        int commentCount,
+        int order,
+        string color,
+        bool isShared,
+        bool isFavorite,
+        bool isInboxProject,
+        bool isTeamInbox,
+        string url,
+        string viewStyle,
+        string? parentId = default)
     {
         Id = id;
         Name = name;
