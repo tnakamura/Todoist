@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Todoist.Models;
-using static Todoist.Constants.Endpoints;
+using static Todoist.Endpoints;
 
 namespace Todoist;
 
@@ -17,7 +17,7 @@ public static class Authentication
         string state)
     {
         var scope = string.Join(",", permissions.Select(x => x.ToScope()));
-        return $"{API_AUTHORIZATION_BASE_URI}{ENDPOINT_AUTHORIZATION}?client_id={clientId}&scope={scope}&state={state}";
+        return $"{GetAuthBaseUri()}{ENDPOINT_AUTHORIZATION}?client_id={clientId}&scope={scope}&state={state}";
     }
 
     private static string ToScope(this Permission permission)

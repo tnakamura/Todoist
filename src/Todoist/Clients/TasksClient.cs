@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Todoist.Clients;
 using Todoist.Models;
-using static Todoist.Constants.Endpoints;
+using static Todoist.Endpoints;
 
 namespace Todoist;
 
@@ -13,7 +13,7 @@ public partial class TodoistClient : ITasksClient
     async ValueTask<Models.Task> ITasksClient.CreateAsync(CreateTaskArgs args, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_TASKS}",
             payload: args,
             requestId: requestId,
             cancellationToken: cancellationToken)
@@ -25,7 +25,7 @@ public partial class TodoistClient : ITasksClient
     async ValueTask<bool> ITasksClient.CloseAsync(string id, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync<object?>(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}/{ENDPOINT_REST_TASK_CLOSE}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_TASKS}/{id}/{ENDPOINT_REST_TASK_CLOSE}",
             payload: null,
             requestId: requestId,
             cancellationToken: cancellationToken)
@@ -36,7 +36,7 @@ public partial class TodoistClient : ITasksClient
     async ValueTask<bool> ITasksClient.DeleteAsync(string id, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.DeleteAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_TASKS}/{id}",
             requestId: requestId,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -45,7 +45,7 @@ public partial class TodoistClient : ITasksClient
 
     async ValueTask<IReadOnlyList<Models.Task>> ITasksClient.GetAllAsync(GetTasksArgs? args, CancellationToken cancellationToken)
     {
-        var requestUri = $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}";
+        var requestUri = $"{GetRestBaseUri()}{ENDPOINT_REST_TASKS}";
         if (args != null)
         {
             var query = HttpUtility.ParseQueryString(string.Empty);
@@ -73,7 +73,7 @@ public partial class TodoistClient : ITasksClient
     async ValueTask<Models.Task> ITasksClient.GetAsync(string id, CancellationToken cancellationToken)
     {
         var response = await _client.GetAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_TASKS}/{id}",
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         return await response.DeserializeAsync<Models.Task>(cancellationToken)
@@ -83,7 +83,7 @@ public partial class TodoistClient : ITasksClient
     async ValueTask<bool> ITasksClient.ReopenAsync(string id, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync<object?>(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}/{ENDPOINT_REST_TASK_REOPEN}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_TASKS}/{id}/{ENDPOINT_REST_TASK_REOPEN}",
             payload: null,
             requestId: requestId,
             cancellationToken: cancellationToken)
@@ -94,7 +94,7 @@ public partial class TodoistClient : ITasksClient
     async ValueTask<Models.Task> ITasksClient.UpdateAsync(string id, UpdateTaskArgs args, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_TASKS}/{id}",
             payload: args,
             requestId: requestId,
             cancellationToken: cancellationToken)

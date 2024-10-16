@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Todoist.Clients;
 using Todoist.Models;
-using static Todoist.Constants.Endpoints;
+using static Todoist.Endpoints;
 
 namespace Todoist;
 
@@ -13,7 +13,7 @@ public partial class TodoistClient : ICommentsClient
     async ValueTask<Comment> ICommentsClient.CreateAsync(CreateCommentArgs args, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_COMMENTS}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_COMMENTS}",
             payload: args,
             requestId: requestId,
             cancellationToken: cancellationToken)
@@ -25,7 +25,7 @@ public partial class TodoistClient : ICommentsClient
     async ValueTask<bool> ICommentsClient.DeleteAsync(string id, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.DeleteAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_COMMENTS}/{id}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_COMMENTS}/{id}",
             requestId: requestId,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -34,7 +34,7 @@ public partial class TodoistClient : ICommentsClient
 
     async ValueTask<IReadOnlyList<Comment>> ICommentsClient.GetAllAsync(GetCommentsArgs args, CancellationToken cancellationToken)
     {
-        var requestUri = $"{API_REST_BASE_URI}{ENDPOINT_REST_COMMENTS}";
+        var requestUri = $"{GetRestBaseUri()}{ENDPOINT_REST_COMMENTS}";
 
         var query = HttpUtility.ParseQueryString(string.Empty);
         if (args.ProjectId != null)
@@ -55,7 +55,7 @@ public partial class TodoistClient : ICommentsClient
     async ValueTask<Comment> ICommentsClient.GetAsync(string id, CancellationToken cancellationToken)
     {
         var response = await _client.GetAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_COMMENTS}/{id}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_COMMENTS}/{id}",
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         return await response.DeserializeAsync<Comment>(cancellationToken)
@@ -65,7 +65,7 @@ public partial class TodoistClient : ICommentsClient
     async ValueTask<Comment> ICommentsClient.UpdateAsync(string id, UpdateCommentArgs args, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_COMMENTS}/{id}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_COMMENTS}/{id}",
             payload: args,
             requestId: requestId,
             cancellationToken: cancellationToken)

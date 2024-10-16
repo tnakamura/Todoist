@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Todoist.Clients;
 using Todoist.Models;
-using static Todoist.Constants.Endpoints;
+using static Todoist.Endpoints;
 
 namespace Todoist;
 
@@ -12,7 +12,7 @@ public partial class TodoistClient : ISectionsClient
     async ValueTask<Section> ISectionsClient.CreateAsync(CreateSectionArgs args, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_SECTIONS}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_SECTIONS}",
             payload: args,
             requestId: requestId,
             cancellationToken: cancellationToken)
@@ -24,7 +24,7 @@ public partial class TodoistClient : ISectionsClient
     async ValueTask<bool> ISectionsClient.DeleteAsync(string id, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.DeleteAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_SECTIONS}/{id}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_SECTIONS}/{id}",
             requestId: requestId,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -33,7 +33,7 @@ public partial class TodoistClient : ISectionsClient
 
     async ValueTask<IReadOnlyList<Section>> ISectionsClient.GetAllAsync(string? projectId, CancellationToken cancellationToken)
     {
-        var requestUri = $"{API_REST_BASE_URI}{ENDPOINT_REST_SECTIONS}";
+        var requestUri = $"{GetRestBaseUri()}{ENDPOINT_REST_SECTIONS}";
         if (projectId != null)
         {
             requestUri += "?project_id=" + projectId;
@@ -49,7 +49,7 @@ public partial class TodoistClient : ISectionsClient
     async ValueTask<Section> ISectionsClient.GetAsync(string id, CancellationToken cancellationToken)
     {
         var response = await _client.GetAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_SECTIONS}/{id}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_SECTIONS}/{id}",
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         return await response.DeserializeAsync<Section>(cancellationToken)
@@ -59,7 +59,7 @@ public partial class TodoistClient : ISectionsClient
     async ValueTask<Section> ISectionsClient.UpdateAsync(string id, UpdateSectionArgs args, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync(
-            requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_SECTIONS}/{id}",
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_SECTIONS}/{id}",
             payload: args,
             requestId: requestId,
             cancellationToken: cancellationToken)

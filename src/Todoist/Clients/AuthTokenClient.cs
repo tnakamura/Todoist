@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Todoist.Clients;
 using Todoist.Models;
-using static Todoist.Constants.Endpoints;
+using static Todoist.Endpoints;
 
 namespace Todoist;
 
@@ -19,7 +19,7 @@ public partial class TodoistClient : IAuthTokenClient
             ["code"] = args.Code,
         });
         var response = await _client.PostAsync(
-            requestUri: $"{API_AUTHORIZATION_BASE_URI}{ENDPOINT_GET_TOKEN}",
+            requestUri: $"{GetAuthBaseUri()}{ENDPOINT_GET_TOKEN}",
             payload: formContent,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -36,7 +36,7 @@ public partial class TodoistClient : IAuthTokenClient
             ["access_token"] = args.AccessToken,
         });
         var response = await _client.PostAsync(
-            requestUri: $"{API_AUTHORIZATION_BASE_URI}{ENDPOINT_REVOKE_TOKEN}",
+            requestUri: $"{GetAuthBaseUri()}{ENDPOINT_REVOKE_TOKEN}",
             payload: formContent,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
