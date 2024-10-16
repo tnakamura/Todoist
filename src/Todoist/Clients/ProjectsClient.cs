@@ -21,7 +21,7 @@ public partial class TodoistClient : IProjectsClient
             .ConfigureAwait(false);
     }
 
-    async ValueTask<bool> IProjectsClient.DeleteAsync(long id, string? requestId, CancellationToken cancellationToken)
+    async ValueTask<bool> IProjectsClient.DeleteAsync(string id, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.DeleteAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_PROJECTS}/{id}",
@@ -41,7 +41,7 @@ public partial class TodoistClient : IProjectsClient
             .ConfigureAwait(false);
     }
 
-    async ValueTask<Project> IProjectsClient.GetAsync(long id, CancellationToken cancellationToken)
+    async ValueTask<Project> IProjectsClient.GetAsync(string id, CancellationToken cancellationToken)
     {
         var response = await _client.GetAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_PROJECTS}/{id}",
@@ -51,7 +51,7 @@ public partial class TodoistClient : IProjectsClient
             .ConfigureAwait(false);
     }
 
-    async ValueTask<bool> IProjectsClient.UpdateAsync(long id, UpdateProjectArgs args, string? requestId, CancellationToken cancellationToken)
+    async ValueTask<Project> IProjectsClient.UpdateAsync(string id, UpdateProjectArgs args, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_PROJECTS}/{id}",
@@ -59,7 +59,8 @@ public partial class TodoistClient : IProjectsClient
             requestId: requestId,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        return response.IsSuccessStatusCode;
+        return await response.DeserializeAsync<Project>(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     ICollaboratorsClient IProjectsClient.Collaborators => this;

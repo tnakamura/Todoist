@@ -25,15 +25,16 @@ public class ProjectsApiTest
                 response.Content = new StringContent(
                     content: @"[
     {
-        ""id"": 220474322,
+        ""id"": ""220474322"",
         ""name"": ""Inbox"",
         ""comment_count"": 10,
-        ""order"": 1,
-        ""color"": 47,
-        ""shared"": false,
-        ""favorite"": false,
-        ""inbox_project"": true,
-        ""team_inbox"": false,
+        ""order"": 0,
+        ""color"": ""grey"",
+        ""is_shared"": false,
+        ""is_favorite"": false,
+        ""is_inbox_project"": true,
+        ""is_team_inbox"": false,
+        ""view_style"": ""list"",
         ""url"": ""https://todoist.com/showProject?id=220474322"",
         ""parent_id"": null
     }
@@ -48,15 +49,16 @@ public class ProjectsApiTest
         var projects = await client.Projects.GetAllAsync();
 
         Assert.Single(projects);
-        Assert.Equal(220474322, projects[0].Id);
+        Assert.Equal("220474322", projects[0].Id);
         Assert.Equal("Inbox", projects[0].Name);
         Assert.Equal(10, projects[0].CommentCount);
-        Assert.Equal(1, projects[0].Order);
-        Assert.Equal(47, projects[0].Color);
-        Assert.False(projects[0].Shared);
-        Assert.False(projects[0].Favorite);
-        Assert.True(projects[0].InboxProject);
-        Assert.False(projects[0].TeamInbox);
+        Assert.Equal(0, projects[0].Order);
+        Assert.Equal("grey", projects[0].Color);
+        Assert.False(projects[0].IsShared);
+        Assert.False(projects[0].IsFavorite);
+        Assert.True(projects[0].IsInboxProject);
+        Assert.False(projects[0].IsTeamInbox);
+        Assert.Equal("list", projects[0].ViewStyle);
         Assert.Equal("https://todoist.com/showProject?id=220474322", projects[0].Url);
         Assert.Null(projects[0].ParentId);
     }
@@ -68,22 +70,26 @@ public class ProjectsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_PROJECTS + "/2203306141"), r.RequestUri?.AbsoluteUri);
-                Assert.Equal(HttpMethod.Get,r.Method );
+                Assert.Equal("https://api.todoist.com/rest/v2/projects/2203306141", r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Get, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
 
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"{
-    ""id"": 2203306141,
+    ""id"": ""2203306141"",
     ""name"": ""Shopping List"",
     ""comment_count"": 0,
-    ""color"": 47,
-    ""shared"": false,
+    ""color"": ""charcoal"",
+    ""is_shared"": false,
     ""order"": 1,
-    ""favorite"": false,
-    ""url"": ""https://todoist.com/showProject?id=2203306141""
+    ""is_favorite"": false,
+    ""is_inbox_project"": false,
+    ""is_team_inbox"": false,
+    ""view_style"": ""list"",
+    ""url"": ""https://todoist.com/showProject?id=2203306141"",
+    ""parent_id"": null
 }",
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
@@ -92,18 +98,19 @@ public class ProjectsApiTest
         };
         var client = new TodoistClient("TestToken", handlerMock);
 
-        var project = await client.Projects.GetAsync(2203306141);
+        var project = await client.Projects.GetAsync("2203306141");
 
-        Assert.Equal(2203306141, project.Id);
+        Assert.Equal("2203306141", project.Id);
         Assert.Equal("Shopping List", project.Name);
         Assert.Equal(0, project.CommentCount);
         Assert.Equal(1, project.Order);
-        Assert.Equal(47, project.Color);
-        Assert.False(project.Shared);
-        Assert.False(project.Favorite);
-        Assert.False(project.InboxProject);
-        Assert.False(project.TeamInbox);
+        Assert.Equal("charcoal", project.Color);
+        Assert.False(project.IsShared);
+        Assert.False(project.IsFavorite);
+        Assert.False(project.IsInboxProject);
+        Assert.False(project.IsTeamInbox);
         Assert.Equal("https://todoist.com/showProject?id=2203306141", project.Url);
+        Assert.Equal("list", project.ViewStyle);
         Assert.Null(project.ParentId);
     }
 
@@ -114,7 +121,7 @@ public class ProjectsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_PROJECTS + "/2203306141"), r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/rest/v2/projects/2203306141", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Delete, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -125,7 +132,7 @@ public class ProjectsApiTest
         };
         var client = new TodoistClient("TestToken", handlerMock);
 
-        var actual = await client.Projects.DeleteAsync(2203306141);
+        var actual = await client.Projects.DeleteAsync("2203306141");
 
         Assert.True(actual);
     }
@@ -137,7 +144,7 @@ public class ProjectsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_PROJECTS), r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/rest/v2/projects", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -146,15 +153,18 @@ public class ProjectsApiTest
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(
                     content: @"{
-    ""id"": 2203306141,
+    ""id"": ""2203306141"",
     ""name"": ""Shopping List"",
     ""comment_count"": 0,
-    ""color"": 47,
-    ""shared"": false,
-    ""sync_id"": 0,
+    ""color"": ""charcoal"",
+    ""is_shared"": false,
     ""order"": 1,
-    ""favorite"": true,
-    ""url"": ""https://todoist.com/showProject?id=2203306141""
+    ""is_favorite"": true,
+    ""is_inbox_project"": false,
+    ""is_team_inbox"": false,
+    ""view_style"": ""list"",
+    ""url"": ""https://todoist.com/showProject?id=2203306141"",
+    ""parent_id"": null
 }",
                     encoding: Encoding.UTF8,
                     mediaType: "application/json");
@@ -167,16 +177,17 @@ public class ProjectsApiTest
             new Models.CreateProjectArgs(
                 name: "Shopping List"));
 
-        Assert.Equal(2203306141, project.Id);
+        Assert.Equal("2203306141", project.Id);
         Assert.Equal("Shopping List", project.Name);
         Assert.Equal(0, project.CommentCount);
         Assert.Equal(1, project.Order);
-        Assert.Equal(47, project.Color);
-        Assert.False(project.Shared);
-        Assert.True(project.Favorite);
-        Assert.False(project.InboxProject);
-        Assert.False(project.TeamInbox);
+        Assert.Equal("charcoal", project.Color);
+        Assert.False(project.IsShared);
+        Assert.True(project.IsFavorite);
+        Assert.False(project.IsInboxProject);
+        Assert.False(project.IsTeamInbox);
         Assert.Equal("https://todoist.com/showProject?id=2203306141", project.Url);
+        Assert.Equal("list", project.ViewStyle);
         Assert.Null(project.ParentId);
     }
 
@@ -187,7 +198,7 @@ public class ProjectsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_PROJECTS + "/2203306141"), r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/rest/v2/projects/2203306141", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -195,18 +206,46 @@ public class ProjectsApiTest
                 Assert.Contains("\"name\":", content);
                 Assert.Contains("\"Things To Buy\"", content);
 
-                var response = new HttpResponseMessage(HttpStatusCode.NoContent);
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StringContent(
+                    content: @"{
+    ""id"": ""2203306141"",
+    ""name"": ""Things to buy"",
+    ""comment_count"": 0,
+    ""color"": ""charcoal"",
+    ""is_shared"": false,
+    ""order"": 1,
+    ""is_favorite"": false,
+    ""is_inbox_project"": false,
+    ""is_team_inbox"": false,
+    ""view_style"": ""list"",
+    ""url"": ""https://todoist.com/showProject?id=2203306141"",
+    ""parent_id"": null
+}",
+                    encoding: Encoding.UTF8,
+                    mediaType: "application/json");
                 return response;
             }
         };
         var client = new TodoistClient("TestToken", handlerMock);
 
         var actual = await client.Projects.UpdateAsync(
-            2203306141,
+            "2203306141",
             new Models.UpdateProjectArgs(
                 name: "Things To Buy"));
 
-        Assert.True(actual);
+        Assert.Equal("2203306141", actual.Id);
+        Assert.Equal("Things to buy", actual.Name);
+        Assert.Equal(0, actual.CommentCount);
+        Assert.Equal(1, actual.Order);
+        Assert.Equal("charcoal", actual.Color);
+        Assert.False(actual.IsShared);
+        Assert.False(actual.IsFavorite);
+        Assert.False(actual.IsInboxProject);
+        Assert.False(actual.IsTeamInbox);
+        Assert.Equal("https://todoist.com/showProject?id=2203306141", actual.Url);
+        Assert.Equal("list", actual.ViewStyle);
+        Assert.Null(actual.ParentId);
     }
 
     [Fact]

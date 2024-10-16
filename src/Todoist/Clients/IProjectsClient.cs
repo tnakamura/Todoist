@@ -13,7 +13,7 @@ public interface IProjectsClient
     /// <summary>
     /// Get a project
     /// </summary>
-    ValueTask<Project> GetAsync(long id, CancellationToken cancellationToken = default);
+    ValueTask<Project> GetAsync(string id, CancellationToken cancellationToken = default);
     /// <summary>
     /// Get all projects
     /// </summary>
@@ -25,11 +25,11 @@ public interface IProjectsClient
     /// <summary>
     /// Update a project
     /// </summary>
-    ValueTask<bool> UpdateAsync(long id, UpdateProjectArgs args, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<Project> UpdateAsync(string id, UpdateProjectArgs args, string? requestId = null, CancellationToken cancellationToken = default);
     /// <summary>
     /// Delete a project
     /// </summary>
-    ValueTask<bool> DeleteAsync(long id, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<bool> DeleteAsync(string id, string? requestId = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Collaborators

@@ -12,94 +12,107 @@ public partial class Project
     /// </summary>
     [JsonConstructor]
     public Project(
-        long id = default,
+        string id = default,
         string name = default,
         int commentCount = default,
         int order = default,
-        int color = default,
-        bool shared = default,
-        bool favorite = default,
-        bool inboxProject = default,
-        bool teamInbox = default,
+        string color = default,
+        bool isShared = default,
+        bool isFavorite = default,
+        bool isInboxProject = default,
+        bool isTeamInbox = default,
         string url = default,
-        long? parentId = default)
+        string? parentId = default,
+        string viewStyle = default)
     {
         Id = id;
         Name = name;
         CommentCount = commentCount;
         Order = order;
         Color = color;
-        Shared = shared;
-        Favorite = favorite;
-        InboxProject = inboxProject;
-        TeamInbox = teamInbox;
+        IsShared = isShared;
+        IsFavorite = isFavorite;
+        IsInboxProject = isInboxProject;
+        IsTeamInbox = isTeamInbox;
         Url = url;
         ParentId = parentId;
+        ViewStyle = viewStyle;
     }
 
     /// <summary>
-    /// Gets Id
+    /// Project ID.
     /// </summary>
     [JsonPropertyName("id")]
-    public long Id { get; private set; }
+    public string Id { get; private set; }
 
     /// <summary>
-    /// Gets Name
+    /// Project name.
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; private set; }
 
     /// <summary>
-    /// Gets CommentCount
+    /// The color of the project icon.
+    /// Refer to the name column in the Colors guide for more info.
     /// </summary>
-    [JsonPropertyName("comment_count")]
-    public int CommentCount { get; private set; }
+    [JsonPropertyName("color")]
+    public string Color { get; private set; }
 
     /// <summary>
-    /// Gets Order
+    /// ID of parent project (will be null for top-level projects).
+    /// </summary>
+    [JsonPropertyName("parent_id")]
+    public string? ParentId { get; private set; }
+
+    /// <summary>
+    /// Project position under the same parent
+    /// (read-only, will be 0 for inbox and team inbox projects).
     /// </summary>
     [JsonPropertyName("order")]
     public int Order { get; private set; }
 
     /// <summary>
-    /// Gets Color
+    /// Number of project comments.
     /// </summary>
-    [JsonPropertyName("color")]
-    public int Color { get; private set; }
+    [JsonPropertyName("comment_count")]
+    public int CommentCount { get; private set; }
 
     /// <summary>
-    /// Gets Shared
+    /// Whether the project is shared
+    /// (read-only, a true or false value).
     /// </summary>
-    [JsonPropertyName("shared")]
-    public bool Shared { get; private set; }
+    [JsonPropertyName("is_shared")]
+    public bool IsShared { get; private set; }
 
     /// <summary>
-    /// Gets Favorite
+    /// Whether the project is a favorite
+    /// (a true or false value).
     /// </summary>
-    [JsonPropertyName("favorite")]
-    public bool Favorite { get; private set; }
+    [JsonPropertyName("is_favorite")]
+    public bool IsFavorite { get; private set; }
 
     /// <summary>
-    /// Gets InboxProject
+    /// Whether the project is the user's Inbox (read-only).
     /// </summary>
-    [JsonPropertyName("inbox_project")]
-    public bool InboxProject { get; private set; }
+    [JsonPropertyName("is_inbox_project")]
+    public bool IsInboxProject { get; private set; }
 
     /// <summary>
-    /// Gets TeamInbox
+    /// Whether the project is the Team Inbox (read-only).
     /// </summary>
-    [JsonPropertyName("team_inbox")]
-    public bool TeamInbox { get; private set; }
+    [JsonPropertyName("is_team_inbox")]
+    public bool IsTeamInbox { get; private set; }
 
     /// <summary>
-    /// Gets Url
+    /// A string value (either list or board).
+    /// This determines the way the project is displayed within the Todoist clients.
+    /// </summary>
+    [JsonPropertyName("view_style")]
+    public string ViewStyle { get; private set; }
+
+    /// <summary>
+    /// URL to access this project in the Todoist web or mobile applications.
     /// </summary>
     [JsonPropertyName("url")]
     public string Url { get; private set; }
-
-    /// <summary>
-    /// Gets ParentId
-    /// </summary>
-    [JsonPropertyName("parent_id")]
-    public long? ParentId { get; private set; }
 }

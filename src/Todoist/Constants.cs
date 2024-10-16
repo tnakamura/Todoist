@@ -4,7 +4,7 @@ internal static class Constants
 {
     internal static class Endpoints
     {
-        public const string API_REST_BASE_URI = "https://api.todoist.com/rest/v1/";
+        public const string API_REST_BASE_URI = "https://api.todoist.com/rest/v2/";
         public const string API_SYNC_BASE_URI = "https://api.todoist.com/sync/v8/";
         public const string API_AUTHORIZATION_BASE_URI = "https://todoist.com/oauth/";
 
