@@ -255,7 +255,7 @@ public class ProjectsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_PROJECTS + "/2203306141/" + ENDPOINT_REST_PROJECT_COLLABORATORS), r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/rest/v2/projects/2203306141/collaborators", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Get, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -264,12 +264,12 @@ public class ProjectsApiTest
                 response.Content = new StringContent(
                     content: @"[
     {
-        ""id"": 2671362,
+        ""id"": ""2671362"",
         ""name"": ""Alice"",
         ""email"": ""alice@example.com""
     },
     {
-        ""id"": 2671366,
+        ""id"": ""2671366"",
         ""name"": ""Bob"",
         ""email"": ""bob@example.com""
     }
@@ -281,13 +281,13 @@ public class ProjectsApiTest
         };
         var client = new TodoistClient("TestToken", handlerMock);
 
-        var users = await client.Projects.Collaborators.GetAllAsync(2203306141);
+        var users = await client.Projects.Collaborators.GetAllAsync("2203306141");
 
         Assert.Equal(2, users.Count);
-        Assert.Equal(2671362, users[0].Id);
+        Assert.Equal("2671362", users[0].Id);
         Assert.Equal("Alice", users[0].Name);
         Assert.Equal("alice@example.com", users[0].Email);
-        Assert.Equal(2671366, users[1].Id);
+        Assert.Equal("2671366", users[1].Id);
         Assert.Equal("Bob", users[1].Name);
         Assert.Equal("bob@example.com", users[1].Email);
     }

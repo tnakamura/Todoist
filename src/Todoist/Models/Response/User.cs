@@ -15,9 +15,9 @@ public partial class User
     /// <param name="email">email.</param>
     [JsonConstructor]
     public User(
-        long id = default,
-        string name = default,
-        string email = default)
+        string id,
+        string name,
+        string email)
     {
         Id = id;
         Name = name;
@@ -28,7 +28,7 @@ public partial class User
     /// Gets Id
     /// </summary>
     [JsonPropertyName("id")]
-    public long Id { get; private set; }
+    public string Id { get; private set; }
 
     /// <summary>
     /// Gets Name

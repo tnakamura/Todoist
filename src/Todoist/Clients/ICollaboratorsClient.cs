@@ -13,5 +13,5 @@ public interface ICollaboratorsClient
     /// <summary>
     /// Get all collaborators
     /// </summary>
-    ValueTask<IReadOnlyList<User>> GetAllAsync(long projectId, CancellationToken cancellationToken = default);
+    ValueTask<IReadOnlyList<User>> GetAllAsync(string projectId, CancellationToken cancellationToken = default);
 }

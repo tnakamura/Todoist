@@ -9,7 +9,7 @@ namespace Todoist;
 
 public partial class TodoistClient : ICollaboratorsClient
 {
-    async ValueTask<IReadOnlyList<User>> ICollaboratorsClient.GetAllAsync(long projectId, CancellationToken cancellationToken)
+    async ValueTask<IReadOnlyList<User>> ICollaboratorsClient.GetAllAsync(string projectId, CancellationToken cancellationToken)
     {
         var response = await _client.GetAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_PROJECTS}/{projectId}/collaborators",
