@@ -6,7 +6,7 @@ This is the unofficial C# API client for the Todoist REST API.
 ## Installation
 
 ```sh
-Install-Package Todoist
+dotnet add package Todoist
 ```
 
 
