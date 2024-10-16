@@ -1,4 +1,6 @@
-﻿namespace Todoist.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace Todoist.Models;
 
 public abstract class GetCommentsArgs
 {
@@ -8,14 +10,16 @@ public abstract class GetCommentsArgs
     private protected GetCommentsArgs() { }
 
     /// <summary>
-    /// Gets ProjectId
+    /// ID of the project used to filter comments.
     /// </summary>
-    public long? ProjectId { get; private protected set; }
+    [JsonPropertyName("project_id")]
+    public string? ProjectId { get; private protected set; }
 
     /// <summary>
-    /// Gets TaskId
+    /// ID of the task used to filter comments.
     /// </summary>
-    public long? TaskId { get; private protected set; }
+    [JsonPropertyName("task_id")]
+    public string? TaskId { get; private protected set; }
 }
 
 public sealed class GetProjectCommentsArgs : GetCommentsArgs
@@ -23,7 +27,7 @@ public sealed class GetProjectCommentsArgs : GetCommentsArgs
     /// <summary>
     /// Initializes a new instance of the <see cref="GetProjectCommentsArgs" /> class.
     /// </summary>
-    public GetProjectCommentsArgs(long projectId)
+    public GetProjectCommentsArgs(string projectId)
         : base()
     {
         ProjectId = projectId;
@@ -35,7 +39,7 @@ public sealed class GetTaskCommentsArgs : GetCommentsArgs
     /// <summary>
     /// Initializes a new instance of the <see cref="GetTaskCommentsArgs" /> class.
     /// </summary>
-    public GetTaskCommentsArgs(long taskId)
+    public GetTaskCommentsArgs(string taskId)
         : base()
     {
         TaskId = taskId;

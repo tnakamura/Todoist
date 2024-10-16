@@ -17,8 +17,8 @@ namespace Todoist.Models
         /// <param name="attachment">attachment.</param>
         private protected CreateCommentArgs(
             string content,
-            long? taskId = default,
-            long? projectId = default,
+            string? taskId = default,
+            string? projectId = default,
             Attachment? attachment = default)
         {
             Content = content ?? throw new ArgumentNullException(nameof(content));
@@ -28,25 +28,27 @@ namespace Todoist.Models
         }
 
         /// <summary>
-        /// Gets TaskId
+        /// Comment's task ID (for task comments).
         /// </summary>
         [JsonPropertyName("task_id")]
-        public long? TaskId { get; private protected set; }
+        public string? TaskId { get; private protected set; }
 
         /// <summary>
-        /// Gets ProjectId
+        /// Comment's project ID (for project comments).
         /// </summary>
         [JsonPropertyName("project_id")]
-        public long? ProjectId { get; private protected set; }
+        public string? ProjectId { get; private protected set; }
 
         /// <summary>
-        /// Gets Content
+        /// Comment content.
+        /// This value may contain markdown-formatted text and hyperlinks.
+        /// Details on markdown support can be found in the Text Formatting article in the Help Center.
         /// </summary>
         [JsonPropertyName("content")]
         public string Content { get; private set; }
 
         /// <summary>
-        /// Gets or Sets Attachment
+        /// Object for attachment object.
         /// </summary>
         [JsonPropertyName("attachment")]
         public Attachment? Attachment { get; set; }
@@ -64,7 +66,7 @@ namespace Todoist.Models
         /// <param name="content">content (required).</param>
         /// <param name="attachment">attachment.</param>
         public AddTaskCommentArgs(
-            long taskId,
+            string taskId,
             string content,
             Attachment? attachment = default) :
             base(
@@ -87,7 +89,7 @@ namespace Todoist.Models
         /// <param name="content">content (required).</param>
         /// <param name="attachment">attachment.</param>
         public AddProjectCommentArgs(
-            long projectId,
+            string projectId,
             string content,
             Attachment? attachment = default) :
             base(

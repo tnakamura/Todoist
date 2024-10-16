@@ -17,7 +17,7 @@ public interface ICommentsClient
     /// <summary>
     /// Get a comment
     /// </summary>
-    ValueTask<Comment> GetAsync(long id, CancellationToken cancellationToken = default);
+    ValueTask<Comment> GetAsync(string id, CancellationToken cancellationToken = default);
     /// <summary>
     /// Create a new comment
     /// </summary>
@@ -25,9 +25,9 @@ public interface ICommentsClient
     /// <summary>
     /// Update a comment
     /// </summary>
-    ValueTask<bool> UpdateAsync(long id, UpdateCommentArgs args, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<Comment> UpdateAsync(string id, UpdateCommentArgs args, string? requestId = null, CancellationToken cancellationToken = default);
     /// <summary>
     /// Delete a comment
     /// </summary>
-    ValueTask<bool> DeleteAsync(long id, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<bool> DeleteAsync(string id, string? requestId = null, CancellationToken cancellationToken = default);
 }
