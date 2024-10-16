@@ -17,6 +17,10 @@ internal static class Constants
         public const string ENDPOINT_REST_TASK_REOPEN = "reopen";
         public const string ENDPOINT_REST_PROJECT_COLLABORATORS = "collaborators";
 
+        public const string ENDPOINT_REST_SHARED_LABELS = "shared";
+        public const string ENDPOINT_REST_RENAME_SHARED_LABELS = "rename";
+        public const string ENDPOINT_REST_REMOVE_SHARED_LABELS = "remove";
+
         public const string ENDPOINT_SYNC_QUICK_ADD = "quick/add";
 
         public const string ENDPOINT_AUTHORIZATION = "authorize";

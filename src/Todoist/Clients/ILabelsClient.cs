@@ -30,4 +30,8 @@ public interface ILabelsClient
     /// Delete a label
     /// </summary>
     ValueTask<bool> DeleteAsync(string id, string? requestId = null, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Shared labels
+    /// </summary>
+    ISharedLabelsClient SharedLabels { get; }
 }

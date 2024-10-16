@@ -5,7 +5,7 @@ namespace Todoist.Models
     /// <summary>
     /// LabelUpdate
     /// </summary>
-    public class UpdateLabelArgs 
+    public class UpdateLabelArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UpdateLabelArgs" /> class.
@@ -15,7 +15,7 @@ namespace Todoist.Models
         /// <param name="color">color.</param>
         /// <param name="favorite">favorite.</param>
         public UpdateLabelArgs(
-            string name = default,
+            string name,
             int? order = default,
             int? color = default,
             bool? favorite = default)

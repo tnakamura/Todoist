@@ -62,4 +62,6 @@ public partial class TodoistClient : ILabelsClient
         return await response.DeserializeAsync<Label>(cancellationToken)
             .ConfigureAwait(false);
     }
+
+    ISharedLabelsClient ILabelsClient.SharedLabels => this;
 }
