@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using static Todoist.Constants.Endpoints;
 
 namespace Todoist.Test;
 
@@ -16,7 +15,7 @@ public class TokenApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal((API_AUTHORIZATION_BASE_URI + ENDPOINT_GET_TOKEN), r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://todoist.com/oauth/access_token", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(r.Method, HttpMethod.Post);
                 var content = await r.Content!.ReadAsStringAsync();
                 Assert.Contains("client_id=0123456789abcdef", content);
@@ -53,7 +52,7 @@ public class TokenApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal((API_AUTHORIZATION_BASE_URI + ENDPOINT_REVOKE_TOKEN), r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://todoist.com/oauth/access_tokens/revoke", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 var content = await r.Content!.ReadAsStringAsync();
                 Assert.Contains("client_id=0123456789abcdef", content);

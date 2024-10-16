@@ -5,33 +5,36 @@ namespace Todoist.Models
     public sealed class GetTasksArgs
     {
         /// <summary>
-        /// Gets or Sets ProjectId
+        /// Filter tasks by project ID.
         /// </summary>
         public long? ProjectId { get; set; }
 
         /// <summary>
-        /// Gets or Sets SectionId
+        /// Filter tasks by section ID.
         /// </summary>
         public long? SectionId { get; set; }
 
         /// <summary>
-        /// Gets or Sets LabelId
+        /// Filter tasks by label name.
         /// </summary>
         public long? LabelId { get; set; }
 
         /// <summary>
-        /// Gets or Sets Filter
+        /// Filter by any supported filter.
+        /// Multiple filters (using the comma , operator) are not supported.
         /// </summary>
-        public string Filter { get; set; }
+        public string? Filter { get; set; }
 
         /// <summary>
-        /// Gets or Sets Lang
+        /// IETF language tag defining what language filter is written in,
+        /// if differs from default English.
         /// </summary>
-        public string Lang { get; set; }
+        public string? Lang { get; set; }
 
         /// <summary>
-        /// Gets or Sets Ids
+        /// A list of the task IDs to retrieve,
+        /// this should be a comma separated list.
         /// </summary>
-        public IList<long> Ids { get; set; }
+        public IList<long>? Ids { get; set; }
     }
 }

@@ -14,7 +14,7 @@ public interface ITasksClient
     /// <summary>
     /// Get an active task
     /// </summary>
-    ValueTask<TodoistTask> GetAsync(long id, CancellationToken cancellationToken = default);
+    ValueTask<TodoistTask> GetAsync(string id, CancellationToken cancellationToken = default);
     /// <summary>
     /// Get active tasks
     /// </summary>
@@ -26,17 +26,17 @@ public interface ITasksClient
     /// <summary>
     /// Update a task
     /// </summary>
-    ValueTask<bool> UpdateAsync(long id, UpdateTaskArgs args, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<TodoistTask> UpdateAsync(string id, UpdateTaskArgs args, string? requestId = null, CancellationToken cancellationToken = default);
     /// <summary>
     /// Close a task
     /// </summary>
-    ValueTask<bool> CloseAsync(long id, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<bool> CloseAsync(string id, string? requestId = null, CancellationToken cancellationToken = default);
     /// <summary>
     /// Reopen a task
     /// </summary>
-    ValueTask<bool> ReopenAsync(long id, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<bool> ReopenAsync(string id, string? requestId = null, CancellationToken cancellationToken = default);
     /// <summary>
     /// Delete a task
     /// </summary>
-    ValueTask<bool> DeleteAsync(long id, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<bool> DeleteAsync(string id, string? requestId = null, CancellationToken cancellationToken = default);
 }

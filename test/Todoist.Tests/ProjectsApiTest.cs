@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using static Todoist.Constants.Endpoints;
 
 namespace Todoist.Test;
 
@@ -16,7 +15,7 @@ public class ProjectsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal((API_REST_BASE_URI + ENDPOINT_REST_PROJECTS), r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/rest/v2/projects", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(r.Method, HttpMethod.Get);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);

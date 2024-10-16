@@ -22,7 +22,7 @@ public partial class TodoistClient : ITasksClient
             .ConfigureAwait(false);
     }
 
-    async ValueTask<bool> ITasksClient.CloseAsync(long id, string? requestId, CancellationToken cancellationToken)
+    async ValueTask<bool> ITasksClient.CloseAsync(string id, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync<object?>(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}/{ENDPOINT_REST_TASK_CLOSE}",
@@ -33,7 +33,7 @@ public partial class TodoistClient : ITasksClient
         return response.IsSuccessStatusCode;
     }
 
-    async ValueTask<bool> ITasksClient.DeleteAsync(long id, string? requestId, CancellationToken cancellationToken)
+    async ValueTask<bool> ITasksClient.DeleteAsync(string id, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.DeleteAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
@@ -70,7 +70,7 @@ public partial class TodoistClient : ITasksClient
             .ConfigureAwait(false);
     }
 
-    async ValueTask<Models.Task> ITasksClient.GetAsync(long id, CancellationToken cancellationToken)
+    async ValueTask<Models.Task> ITasksClient.GetAsync(string id, CancellationToken cancellationToken)
     {
         var response = await _client.GetAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
@@ -80,7 +80,7 @@ public partial class TodoistClient : ITasksClient
             .ConfigureAwait(false);
     }
 
-    async ValueTask<bool> ITasksClient.ReopenAsync(long id, string? requestId, CancellationToken cancellationToken)
+    async ValueTask<bool> ITasksClient.ReopenAsync(string id, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync<object?>(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}/{ENDPOINT_REST_TASK_REOPEN}",
@@ -91,7 +91,7 @@ public partial class TodoistClient : ITasksClient
         return response.IsSuccessStatusCode;
     }
 
-    async ValueTask<bool> ITasksClient.UpdateAsync(long id, UpdateTaskArgs args, string? requestId, CancellationToken cancellationToken)
+    async ValueTask<Models.Task> ITasksClient.UpdateAsync(string id, UpdateTaskArgs args, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_TASKS}/{id}",
@@ -99,6 +99,7 @@ public partial class TodoistClient : ITasksClient
             requestId: requestId,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        return response.IsSuccessStatusCode;
+        return await response.DeserializeAsync<Models.Task>(cancellationToken)
+            .ConfigureAwait(false);
     }
 }

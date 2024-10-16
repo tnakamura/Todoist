@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using static Todoist.Constants.Endpoints;
 
 namespace Todoist.Test;
 
