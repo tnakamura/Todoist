@@ -1,5 +1,8 @@
 ﻿namespace Todoist.Models;
 
+/// <summary>
+/// Permission
+/// </summary>
 public enum Permission
 {
     /// <summary>

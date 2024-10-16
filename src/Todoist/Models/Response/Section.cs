@@ -60,21 +60,13 @@ public partial class Section : IEquatable<Section>
     [JsonPropertyName("name")]
     public string Name { get; private set; }
 
-    /// <summary>
-    /// Returns true if objects are equal
-    /// </summary>
-    /// <param name="input">Object to be compared</param>
-    /// <returns>Boolean</returns>
+    /// <inheritdoc/>
     public override bool Equals(object input)
     {
         return Equals(input as Section);
     }
 
-    /// <summary>
-    /// Returns true if Section instances are equal
-    /// </summary>
-    /// <param name="input">Instance of Section to be compared</param>
-    /// <returns>Boolean</returns>
+    /// <inheritdoc/>
     public bool Equals(Section? input)
     {
         if (input == null)
@@ -101,10 +93,7 @@ public partial class Section : IEquatable<Section>
             );
     }
 
-    /// <summary>
-    /// Gets the hash code
-    /// </summary>
-    /// <returns>Hash code</returns>
+    /// <inheritdoc/>
     public override int GetHashCode()
     {
         unchecked // Overflow is fine, just wrap

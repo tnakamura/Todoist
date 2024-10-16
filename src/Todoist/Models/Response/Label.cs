@@ -11,105 +11,106 @@ public partial class Label : IEquatable<Label>
     /// <summary>
     /// Initializes a new instance of the <see cref="Label" /> class.
     /// </summary>
-    /// <param name="id">id.</param>
-    /// <param name="name">name.</param>
-    /// <param name="color">color.</param>
-    /// <param name="order">order.</param>
-    /// <param name="favorite">favorite.</param>
+    /// <param name="id">
+    /// Label ID.
+    /// </param>
+    /// <param name="name">
+    /// Label name.
+    /// </param>
+    /// <param name="color">
+    /// The color of the label icon.
+    /// Refer to the name column in the Colors guide for more info.
+    /// </param>
+    /// <param name="order">
+    /// Number used by clients to sort list of labels.
+    /// </param>
+    /// <param name="isFavorite">
+    /// Whether the label is a favorite (a true or false value).
+    /// </param>
     [JsonConstructor]
     public Label(
-        long id = default,
-        string? name = default,
-        int color = default,
-        int order = default,
-        bool favorite = default)
+        string id,
+        string name,
+        string color,
+        int order,
+        bool isFavorite)
     {
         Id = id;
         Name = name;
         Color = color;
         Order = order;
-        Favorite = favorite;
+        IsFavorite = isFavorite;
     }
 
     /// <summary>
-    /// Gets Id
+    /// Label ID.
     /// </summary>
     [JsonPropertyName("id")]
-    public long Id { get; private set; }
+    public string Id { get; private set; }
 
     /// <summary>
-    /// Gets Name
+    /// Label name.
     /// </summary>
     [JsonPropertyName("name")]
-    public string? Name { get; private set; }
+    public string Name { get; private set; }
 
     /// <summary>
-    /// Gets Color
+    /// The color of the label icon.
+    /// Refer to the name column in the Colors guide for more info.
     /// </summary>
     [JsonPropertyName("color")]
-    public int Color { get; private set; }
+    public string Color { get; private set; }
 
     /// <summary>
-    /// Gets Order
+    /// Number used by clients to sort list of labels.
     /// </summary>
     [JsonPropertyName("order")]
     public int Order { get; private set; }
 
     /// <summary>
-    /// Gets Favorite
+    /// Whether the label is a favorite (a true or false value).
     /// </summary>
-    [JsonPropertyName("favorite")]
-    public bool Favorite { get; private set; }
+    [JsonPropertyName("is_favorite")]
+    public bool IsFavorite { get; private set; }
 
-    /// <summary>
-    /// Returns true if objects are equal
-    /// </summary>
-    /// <param name="input">Object to be compared</param>
-    /// <returns>Boolean</returns>
+    /// <inheritdoc/>
     public override bool Equals(object input)
     {
         return Equals(input as Label);
     }
 
-    /// <summary>
-    /// Returns true if Label instances are equal
-    /// </summary>
-    /// <param name="input">Instance of Label to be compared</param>
-    /// <returns>Boolean</returns>
-    public bool Equals(Label input)
+    /// <inheritdoc/>
+    public bool Equals(Label? input)
     {
         if (input == null)
         {
             return false;
         }
-        return 
+        return
             (
                 this.Id == input.Id ||
                 this.Id.Equals(input.Id)
-            ) && 
+            ) &&
             (
                 this.Name == input.Name ||
                 (this.Name != null &&
                 this.Name.Equals(input.Name))
-            ) && 
+            ) &&
             (
                 this.Color == input.Color ||
                 this.Color.Equals(input.Color)
-            ) && 
+            ) &&
             (
                 this.Order == input.Order ||
                 this.Order.Equals(input.Order)
-            ) && 
+            ) &&
             (
-                this.Favorite == input.Favorite ||
-                this.Favorite.Equals(input.Favorite)
+                this.IsFavorite == input.IsFavorite ||
+                this.IsFavorite.Equals(input.IsFavorite)
             );
     }
 
-    /// <summary>
-    /// Gets the hash code
-    /// </summary>
-    /// <returns>Hash code</returns>
+    /// <inheritdoc/>
     public override int GetHashCode()
     {
         unchecked // Overflow is fine, just wrap
@@ -122,7 +123,7 @@ public partial class Label : IEquatable<Label>
             }
             hashCode = (hashCode * 59) + this.Color.GetHashCode();
             hashCode = (hashCode * 59) + this.Order.GetHashCode();
-            hashCode = (hashCode * 59) + this.Favorite.GetHashCode();
+            hashCode = (hashCode * 59) + this.IsFavorite.GetHashCode();
             return hashCode;
         }
     }

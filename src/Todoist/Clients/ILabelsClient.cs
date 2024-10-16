@@ -13,7 +13,7 @@ public interface ILabelsClient
     /// <summary>
     /// Get a label
     /// </summary>
-    ValueTask<Label> GetAsync(long id, CancellationToken cancellationToken = default);
+    ValueTask<Label> GetAsync(string id, CancellationToken cancellationToken = default);
     /// <summary>
     /// Get all labels
     /// </summary>
@@ -25,9 +25,9 @@ public interface ILabelsClient
     /// <summary>
     /// Update a label
     /// </summary>
-    ValueTask<bool> UpdateAsync(long id, UpdateLabelArgs args, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<Label> UpdateAsync(string id, UpdateLabelArgs args, string? requestId = null, CancellationToken cancellationToken = default);
     /// <summary>
     /// Delete a label
     /// </summary>
-    ValueTask<bool> DeleteAsync(long id, string? requestId = null, CancellationToken cancellationToken = default);
+    ValueTask<bool> DeleteAsync(string id, string? requestId = null, CancellationToken cancellationToken = default);
 }

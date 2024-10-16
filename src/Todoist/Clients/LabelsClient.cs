@@ -21,7 +21,7 @@ public partial class TodoistClient : ILabelsClient
             .ConfigureAwait(false);
     }
 
-    async ValueTask<bool> ILabelsClient.DeleteAsync(long id, string? requestId, CancellationToken cancellationToken)
+    async ValueTask<bool> ILabelsClient.DeleteAsync(string id, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.DeleteAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}/{id}",
@@ -41,7 +41,7 @@ public partial class TodoistClient : ILabelsClient
             .ConfigureAwait(false);
     }
 
-    async ValueTask<Label> ILabelsClient.GetAsync(long id, CancellationToken cancellationToken)
+    async ValueTask<Label> ILabelsClient.GetAsync(string id, CancellationToken cancellationToken)
     {
         var response = await _client.GetAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}/{id}",
@@ -51,7 +51,7 @@ public partial class TodoistClient : ILabelsClient
             .ConfigureAwait(false);
     }
 
-    async ValueTask<bool> ILabelsClient.UpdateAsync(long id, UpdateLabelArgs args, string? requestId, CancellationToken cancellationToken)
+    async ValueTask<Label> ILabelsClient.UpdateAsync(string id, UpdateLabelArgs args, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync(
             requestUri: $"{API_REST_BASE_URI}{ENDPOINT_REST_LABELS}/{id}",
@@ -59,6 +59,7 @@ public partial class TodoistClient : ILabelsClient
             requestId: requestId,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        return response.IsSuccessStatusCode;
+        return await response.DeserializeAsync<Label>(cancellationToken)
+            .ConfigureAwait(false);
     }
 }
