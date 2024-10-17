@@ -12,7 +12,7 @@
     <Description>Todoist REST API</Description>
     <Copyright>2021 (C) tnakamura</Copyright>
     <RootNamespace>Todoist</RootNamespace>
-    <Version>0.0.1</Version>
+    <Version>0.1.0</Version>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Todoist.xml</DocumentationFile>
     <RepositoryUrl>https://github.com/tnakamura/Todoist.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -23,6 +23,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<LangVersion>latest</LangVersion>
 	<Nullable>enable</Nullable>
+	<PackageProjectUrl>https://github.com/tnakamura/Todoist</PackageProjectUrl>
+	<PackageTags>todoist;rest;api</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
