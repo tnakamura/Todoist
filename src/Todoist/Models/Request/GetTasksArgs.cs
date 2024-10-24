@@ -7,17 +7,17 @@ public sealed class GetTasksArgs
     /// <summary>
     /// Filter tasks by project ID.
     /// </summary>
-    public long? ProjectId { get; set; }
+    public string? ProjectId { get; set; }
 
     /// <summary>
     /// Filter tasks by section ID.
     /// </summary>
-    public long? SectionId { get; set; }
+    public string? SectionId { get; set; }
 
     /// <summary>
     /// Filter tasks by label name.
     /// </summary>
-    public long? LabelId { get; set; }
+    public string? LabelId { get; set; }
 
     /// <summary>
     /// Filter by any supported filter.
@@ -35,5 +35,5 @@ public sealed class GetTasksArgs
     /// A list of the task IDs to retrieve,
     /// this should be a comma separated list.
     /// </summary>
-    public IList<long>? Ids { get; set; }
+    public IList<string>? Ids { get; set; }
 }

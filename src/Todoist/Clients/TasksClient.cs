@@ -50,17 +50,33 @@ public partial class TodoistClient : ITasksClient
         {
             var query = HttpUtility.ParseQueryString(string.Empty);
             if (args.ProjectId != null)
-                query.Add("project_id", args.ProjectId.Value.ToString());
+            {
+                query.Add("project_id", args.ProjectId);
+            }
             if (args.SectionId != null)
-                query.Add("section_id", args.SectionId.Value.ToString());
+            {
+                query.Add("section_id", args.SectionId);
+            }
             if (args.LabelId != null)
-                query.Add("label_id", args.LabelId.Value.ToString());
+            {
+                query.Add("label_id", args.LabelId);
+            }
             if (args.Lang != null)
+            {
                 query.Add("lang", args.Lang);
+            }
             if (args.Filter != null)
+            {
                 query.Add("filter", args.Filter);
+            }
+            if (args.Ids != null && args.Ids.Count > 0)
+            {
+                query.Add("ids", string.Join(",", args.Ids));
+            }
             if (query.HasKeys())
+            {
                 requestUri += "?" + query.ToString();
+            }
         }
         var response = await _client.GetAsync(
             requestUri: requestUri,
