@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/examples/">
+    <Project Path="examples/TodoistExample/TodoistExample.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Todoist/Todoist.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Todoist.Tests/Todoist.Test.csproj" />
+  </Folder>
+</Solution>
