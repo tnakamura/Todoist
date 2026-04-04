@@ -3,19 +3,18 @@
 internal static class Endpoints
 {
     const string BASE_URI = "https://api.todoist.com";
-    const string API_REST_BASE_URI = "/rest/v2/";
-    const string API_SYNC_BASE_URI = "/sync/v8/";
+    const string API_V1_BASE_URI = "/api/v1/";
     const string TODOIST_URI = "https://todoist.com";
     const string API_AUTHORIZATION_BASE_URI = "/oauth/";
 
     public static string GetRestBaseUri(string domainBase = BASE_URI)
     {
-        return domainBase + API_REST_BASE_URI;
+        return domainBase + API_V1_BASE_URI;
     }
 
     public static string GetSyncBaseUri(string domainBase = BASE_URI)
     {
-        return domainBase + API_SYNC_BASE_URI;
+        return domainBase + API_V1_BASE_URI;
     }
 
     public static string GetAuthBaseUri(string domainBase = TODOIST_URI)
@@ -36,9 +35,9 @@ internal static class Endpoints
     public const string ENDPOINT_REST_PROJECT_COLLABORATORS = "collaborators";
 
 
-    public const string ENDPOINT_SYNC_QUICK_ADD = "quick/add";
+    public const string ENDPOINT_SYNC_QUICK_ADD = "tasks/quick";
 
     public const string ENDPOINT_AUTHORIZATION = "authorize";
     public const string ENDPOINT_GET_TOKEN = "access_token";
-    public const string ENDPOINT_REVOKE_TOKEN = "access_tokens/revoke";
+    public const string ENDPOINT_REVOKE_TOKEN = "revoke";
 }
