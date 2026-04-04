@@ -2,6 +2,22 @@
 
 This is the unofficial C# API client for the Todoist API v1.
 
+## API Coverage
+
+Implemented clients:
+
+- AuthToken
+- Tasks (including Quick Add)
+- Projects (including Collaborators)
+- Sections
+- Labels (including Shared Labels)
+- Comments
+- Reminders (read)
+
+Pagination:
+
+- `GetPageAsync(...)` is available for list-style endpoints and returns items with `NextCursor`.
+
 
 ## Installation
 
