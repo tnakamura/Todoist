@@ -30,6 +30,7 @@ internal static class Endpoints
     public const string ENDPOINT_REST_LABELS_SHARED_RENAME = ENDPOINT_REST_LABELS_SHARED + "/rename";
     public const string ENDPOINT_REST_LABELS_SHARED_REMOVE = ENDPOINT_REST_LABELS_SHARED + "/remove";
     public const string ENDPOINT_REST_COMMENTS = "comments";
+    public const string ENDPOINT_REST_REMINDERS = "reminders";
     public const string ENDPOINT_REST_TASK_CLOSE = "close";
     public const string ENDPOINT_REST_TASK_REOPEN = "reopen";
     public const string ENDPOINT_REST_PROJECT_COLLABORATORS = "collaborators";

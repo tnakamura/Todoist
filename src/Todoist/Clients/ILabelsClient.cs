@@ -19,6 +19,10 @@ public interface ILabelsClient
     /// </summary>
     ValueTask<IReadOnlyList<Label>> GetAllAsync(CancellationToken cancellationToken = default);
     /// <summary>
+    /// Get labels page with next cursor.
+    /// </summary>
+    ValueTask<PagedResult<Label>> GetPageAsync(string? cursor = null, CancellationToken cancellationToken = default);
+    /// <summary>
     /// Create a new label
     /// </summary>
     ValueTask<Label> CreateAsync(CreateLabelArgs args, string? requestId = null, CancellationToken cancellationToken = default);

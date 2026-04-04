@@ -16,8 +16,15 @@ public interface ISectionsClient
     /// <param name="projectId">
     /// Filter sections by project ID.
     /// </param>
+    /// <param name="cursor">
+    /// Pagination cursor returned by previous page.
+    /// </param>
     /// <param name="cancellationToken"></param>
-    ValueTask<IReadOnlyList<Section>> GetAllAsync(string? projectId = null, CancellationToken cancellationToken = default);
+    ValueTask<IReadOnlyList<Section>> GetAllAsync(string? projectId = null, string? cursor = null, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Get sections page with next cursor.
+    /// </summary>
+    ValueTask<PagedResult<Section>> GetPageAsync(string? projectId = null, string? cursor = null, CancellationToken cancellationToken = default);
     /// <summary>
     /// Get a single section
     /// </summary>

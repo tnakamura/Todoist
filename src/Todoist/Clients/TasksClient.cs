@@ -10,6 +10,18 @@ namespace Todoist;
 
 public partial class TodoistClient : ITasksClient
 {
+    async ValueTask<Models.Task> ITasksClient.QuickAddAsync(QuickAddTaskArgs args, string? requestId, CancellationToken cancellationToken)
+    {
+        var response = await _client.PostAsync(
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_SYNC_QUICK_ADD}",
+            payload: args,
+            requestId: requestId,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializeAsync<Models.Task>(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     async ValueTask<Models.Task> ITasksClient.CreateAsync(CreateTaskArgs args, string? requestId, CancellationToken cancellationToken)
     {
         var response = await _client.PostAsync(
@@ -46,43 +58,30 @@ public partial class TodoistClient : ITasksClient
     async ValueTask<IReadOnlyList<Models.Task>> ITasksClient.GetAllAsync(GetTasksArgs? args, CancellationToken cancellationToken)
     {
         var requestUri = $"{GetRestBaseUri()}{ENDPOINT_REST_TASKS}";
-        if (args != null)
-        {
-            var query = HttpUtility.ParseQueryString(string.Empty);
-            if (args.ProjectId != null)
-            {
-                query.Add("project_id", args.ProjectId);
-            }
-            if (args.SectionId != null)
-            {
-                query.Add("section_id", args.SectionId);
-            }
-            if (args.LabelId != null)
-            {
-                query.Add("label_id", args.LabelId);
-            }
-            if (args.Lang != null)
-            {
-                query.Add("lang", args.Lang);
-            }
-            if (args.Filter != null)
-            {
-                query.Add("filter", args.Filter);
-            }
-            if (args.Ids != null && args.Ids.Count > 0)
-            {
-                query.Add("ids", string.Join(",", args.Ids));
-            }
-            if (query.HasKeys())
-            {
-                requestUri += "?" + query.ToString();
-            }
-        }
+        var query = BuildTaskQuery(args);
         var response = await _client.GetAsync(
             requestUri: requestUri,
+            queryParameters: query,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         return await response.DeserializeAsync<IReadOnlyList<Models.Task>>()
+            .ConfigureAwait(false);
+    }
+
+    async ValueTask<PagedResult<Models.Task>> ITasksClient.GetPageAsync(GetTasksArgs? args, string? cursor, CancellationToken cancellationToken)
+    {
+        var requestUri = $"{GetRestBaseUri()}{ENDPOINT_REST_TASKS}";
+        var query = BuildTaskQuery(args);
+        if (!string.IsNullOrEmpty(cursor))
+        {
+            query["cursor"] = cursor;
+        }
+        var response = await _client.GetAsync(
+            requestUri: requestUri,
+            queryParameters: query,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializePageAsync<Models.Task>(cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -117,5 +116,26 @@ public partial class TodoistClient : ITasksClient
             .ConfigureAwait(false);
         return await response.DeserializeAsync<Models.Task>(cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    private static Dictionary<string, string?> BuildTaskQuery(GetTasksArgs? args)
+    {
+        var query = new Dictionary<string, string?>();
+        if (args == null)
+        {
+            return query;
+        }
+
+        query["project_id"] = args.ProjectId;
+        query["section_id"] = args.SectionId;
+        query["label_id"] = args.LabelId;
+        query["lang"] = args.Lang;
+        query["filter"] = args.Filter;
+        query["cursor"] = args.Cursor;
+        if (args.Ids != null && args.Ids.Count > 0)
+        {
+            query["ids"] = string.Join(",", args.Ids);
+        }
+        return query;
     }
 }

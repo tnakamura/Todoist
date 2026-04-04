@@ -31,19 +31,36 @@ public partial class TodoistClient : ISectionsClient
         return response.IsSuccessStatusCode;
     }
 
-    async ValueTask<IReadOnlyList<Section>> ISectionsClient.GetAllAsync(string? projectId, CancellationToken cancellationToken)
+    async ValueTask<IReadOnlyList<Section>> ISectionsClient.GetAllAsync(string? projectId, string? cursor, CancellationToken cancellationToken)
     {
-        var requestUri = $"{GetRestBaseUri()}{ENDPOINT_REST_SECTIONS}";
-        if (projectId != null)
+        var query = new Dictionary<string, string?>
         {
-            requestUri += "?project_id=" + projectId;
-        }
+            ["project_id"] = projectId,
+            ["cursor"] = cursor,
+        };
         var response = await _client.GetAsync(
-            requestUri: requestUri,
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_SECTIONS}",
+            queryParameters: query,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         return await response.DeserializeAsync<IReadOnlyList<Section>>(cancellationToken)
             .ConfigureAwait(!false);
+    }
+
+    async ValueTask<PagedResult<Section>> ISectionsClient.GetPageAsync(string? projectId, string? cursor, CancellationToken cancellationToken)
+    {
+        var query = new Dictionary<string, string?>
+        {
+            ["project_id"] = projectId,
+            ["cursor"] = cursor,
+        };
+        var response = await _client.GetAsync(
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_SECTIONS}",
+            queryParameters: query,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializePageAsync<Section>(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     async ValueTask<Section> ISectionsClient.GetAsync(string id, CancellationToken cancellationToken)

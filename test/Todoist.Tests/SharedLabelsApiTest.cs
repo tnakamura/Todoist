@@ -43,6 +43,34 @@ public class SharedLabelsApiTest
     }
 
     [Fact]
+    public async Task GetPageAsyncTest()
+    {
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = static (r, _) =>
+            {
+                Assert.Equal("https://api.todoist.com/api/v1/labels/shared?cursor=CURSOR1", r.RequestUri?.AbsoluteUri);
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Headers.Add("Link", "<https://api.todoist.com/api/v1/labels/shared?cursor=CURSOR2>; rel=\"next\"");
+                response.Content = new StringContent(
+                    content: @"[
+    ""Label1"",
+    ""Label2""
+]",
+                    encoding: Encoding.UTF8,
+                    mediaType: "application/json");
+                return Task.FromResult(response);
+            }
+        };
+        var client = new TodoistClient("TestToken", handlerMock);
+
+        var page = await client.Labels.SharedLabels.GetPageAsync(new Models.GetAllSharedLabelsArgs { Cursor = "CURSOR1" });
+
+        Assert.Equal(2, page.Items.Count);
+        Assert.Equal("CURSOR2", page.NextCursor);
+    }
+
+    [Fact]
     public async Task RenameAsyncTest()
     {
         var handlerMock = new MockHttpMessageHandler
@@ -94,5 +122,4 @@ public class SharedLabelsApiTest
         Assert.True(actual);
     }
 }
-
 

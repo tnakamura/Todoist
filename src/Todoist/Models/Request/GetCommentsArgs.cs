@@ -10,6 +10,12 @@ public abstract class GetCommentsArgs
     private protected GetCommentsArgs() { }
 
     /// <summary>
+    /// Pagination cursor returned by previous page.
+    /// </summary>
+    [JsonPropertyName("cursor")]
+    public string? Cursor { get; set; }
+
+    /// <summary>
     /// ID of the project used to filter comments.
     /// </summary>
     [JsonPropertyName("project_id")]

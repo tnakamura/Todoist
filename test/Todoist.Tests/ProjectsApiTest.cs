@@ -63,6 +63,46 @@ public class ProjectsApiTest
     }
 
     [Fact]
+    public async Task GetPageAsyncTest()
+    {
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
+            {
+                Assert.Equal("https://api.todoist.com/api/v1/projects?cursor=CURSOR1", r.RequestUri?.AbsoluteUri);
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Headers.Add("Link", "<https://api.todoist.com/api/v1/projects?cursor=CURSOR2>; rel=\"next\"");
+                response.Content = new StringContent(
+                    content: @"[
+    {
+        ""id"": ""220474322"",
+        ""name"": ""Inbox"",
+        ""comment_count"": 10,
+        ""order"": 0,
+        ""color"": ""grey"",
+        ""is_shared"": false,
+        ""is_favorite"": false,
+        ""is_inbox_project"": true,
+        ""is_team_inbox"": false,
+        ""view_style"": ""list"",
+        ""url"": ""https://todoist.com/showProject?id=220474322"",
+        ""parent_id"": null
+    }
+]",
+                    encoding: Encoding.UTF8,
+                    mediaType: "application/json");
+                return Task.FromResult(response);
+            }
+        };
+        var client = new TodoistClient("TestToken", handlerMock);
+
+        var page = await client.Projects.GetPageAsync("CURSOR1");
+
+        Assert.Single(page.Items);
+        Assert.Equal("CURSOR2", page.NextCursor);
+    }
+
+    [Fact]
     public async Task GetAsyncTest()
     {
         var handlerMock = new MockHttpMessageHandler
@@ -289,5 +329,36 @@ public class ProjectsApiTest
         Assert.Equal("2671366", users[1].Id);
         Assert.Equal("Bob", users[1].Name);
         Assert.Equal("bob@example.com", users[1].Email);
+    }
+
+    [Fact]
+    public async Task GetCollaboratorsPageAsyncTest()
+    {
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
+            {
+                Assert.Equal("https://api.todoist.com/api/v1/projects/2203306141/collaborators?cursor=CURSOR1", r.RequestUri?.AbsoluteUri);
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Headers.Add("Link", "<https://api.todoist.com/api/v1/projects/2203306141/collaborators?cursor=CURSOR2>; rel=\"next\"");
+                response.Content = new StringContent(
+                    content: @"[
+    {
+        ""id"": ""2671362"",
+        ""name"": ""Alice"",
+        ""email"": ""alice@example.com""
+    }
+]",
+                    encoding: Encoding.UTF8,
+                    mediaType: "application/json");
+                return Task.FromResult(response);
+            },
+        };
+        var client = new TodoistClient("TestToken", handlerMock);
+
+        var page = await client.Projects.Collaborators.GetPageAsync("2203306141", "CURSOR1");
+
+        Assert.Single(page.Items);
+        Assert.Equal("CURSOR2", page.NextCursor);
     }
 }

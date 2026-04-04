@@ -36,4 +36,9 @@ public interface ITodoistClient
     /// Comments
     /// </summary>
     ICommentsClient Comments { get; }
+
+    /// <summary>
+    /// Reminders
+    /// </summary>
+    IRemindersClient Reminders { get; }
 }

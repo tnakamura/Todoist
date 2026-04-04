@@ -34,6 +34,16 @@ public static class Authentication
                 return "data:read";
             case Permission.DataReadWrite:
                 return "data:read_write";
+            case Permission.TaskDelete:
+                return "task:delete";
+            case Permission.NoteAdd:
+                return "note:add";
+            case Permission.NoteDelete:
+                return "note:delete";
+            case Permission.ReminderRead:
+                return "reminder:read";
+            case Permission.ReminderWrite:
+                return "reminder:write";
             default:
                 throw new ArgumentOutOfRangeException(nameof(permission));
         }

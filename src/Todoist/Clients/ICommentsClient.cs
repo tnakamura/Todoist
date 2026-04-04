@@ -15,6 +15,10 @@ public interface ICommentsClient
     /// </summary>
     ValueTask<IReadOnlyList<Comment>> GetAllAsync(GetCommentsArgs args, CancellationToken cancellationToken = default);
     /// <summary>
+    /// Get comments page with next cursor.
+    /// </summary>
+    ValueTask<PagedResult<Comment>> GetPageAsync(GetCommentsArgs args, CancellationToken cancellationToken = default);
+    /// <summary>
     /// Get a comment
     /// </summary>
     ValueTask<Comment> GetAsync(string id, CancellationToken cancellationToken = default);

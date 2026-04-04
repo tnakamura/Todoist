@@ -41,6 +41,18 @@ public partial class TodoistClient : IProjectsClient
             .ConfigureAwait(false);
     }
 
+    async ValueTask<PagedResult<Project>> IProjectsClient.GetPageAsync(string? cursor, CancellationToken cancellationToken)
+    {
+        var query = new Dictionary<string, string?> { ["cursor"] = cursor };
+        var response = await _client.GetAsync(
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_PROJECTS}",
+            queryParameters: query,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializePageAsync<Project>(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     async ValueTask<Project> IProjectsClient.GetAsync(string id, CancellationToken cancellationToken)
     {
         var response = await _client.GetAsync(

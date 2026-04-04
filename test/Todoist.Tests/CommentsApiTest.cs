@@ -64,6 +64,43 @@ public class CommentsApiTest
     }
 
     [Fact]
+    public async Task GetPageAsyncTest()
+    {
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
+            {
+                Assert.Equal(
+                    "https://api.todoist.com/api/v1/comments?task_id=2995104339&cursor=CURSOR1",
+                    r.RequestUri?.AbsoluteUri);
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Headers.Add("Link", "<https://api.todoist.com/api/v1/comments?cursor=CURSOR2>; rel=\"next\"");
+                response.Content = new StringContent(
+                    content: @"[
+    {
+        ""content"": ""Need one bottle of milk"",
+        ""id"": ""2992679862"",
+        ""posted_at"": ""2016-09-22T07:00:00.000000Z"",
+        ""project_id"": null,
+        ""task_id"": ""2995104339"",
+        ""attachment"": null
+    }
+]",
+                    encoding: Encoding.UTF8,
+                    mediaType: "application/json");
+                return Task.FromResult(response);
+            },
+        };
+        var client = new TodoistClient("TestToken", handlerMock);
+        var args = new Models.GetTaskCommentsArgs("2995104339") { Cursor = "CURSOR1" };
+
+        var page = await client.Comments.GetPageAsync(args);
+
+        Assert.Single(page.Items);
+        Assert.Equal("CURSOR2", page.NextCursor);
+    }
+
+    [Fact]
     public async Task GetAsyncTest()
     {
         var handlerMock = new MockHttpMessageHandler
