@@ -38,7 +38,7 @@ public partial class TodoistClient : IAuthTokenClient
             ["token_type_hint"] = "access_token",
         });
         var basicAuthCredentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{args.ClientId}:{args.ClientSecret}"));
-        var request = new HttpRequestMessage(HttpMethod.Post, $"{GetSyncBaseUri()}{ENDPOINT_REVOKE_TOKEN}")
+        var request = new HttpRequestMessage(HttpMethod.Post, $"{GetRestBaseUri()}{ENDPOINT_REVOKE_TOKEN}")
         {
             Content = formContent
         };
