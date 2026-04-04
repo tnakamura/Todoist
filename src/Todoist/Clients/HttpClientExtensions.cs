@@ -13,6 +13,8 @@ namespace Todoist;
 
 internal static class HttpClientExtensions
 {
+    private static readonly char[] CursorTokenTerminators = { '&', '>', '"' };
+
     public static async ValueTask<HttpResponseMessage> GetAsync(
         this HttpMessageInvoker client,
         string requestUri,
@@ -171,7 +173,7 @@ internal static class HttpClientExtensions
         }
 
         var start = cursorIndex + "cursor=".Length;
-        var end = link.IndexOfAny(new[] { '&', '>', '"' }, start);
+        var end = link.IndexOfAny(CursorTokenTerminators, start);
         var rawCursor = end >= 0 ? link.Substring(start, end - start) : link.Substring(start);
         return System.Uri.UnescapeDataString(rawCursor);
     }
