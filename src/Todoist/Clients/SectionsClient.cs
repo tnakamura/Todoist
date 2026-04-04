@@ -44,7 +44,7 @@ public partial class TodoistClient : ISectionsClient
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         return await response.DeserializeAsync<IReadOnlyList<Section>>(cancellationToken)
-            .ConfigureAwait(!false);
+            .ConfigureAwait(false);
     }
 
     async ValueTask<PagedResult<Section>> ISectionsClient.GetPageAsync(string? projectId, string? cursor, CancellationToken cancellationToken)
