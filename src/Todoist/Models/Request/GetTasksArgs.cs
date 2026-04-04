@@ -5,6 +5,11 @@ namespace Todoist.Models;
 public sealed class GetTasksArgs
 {
     /// <summary>
+    /// Pagination cursor returned by previous page.
+    /// </summary>
+    public string? Cursor { get; set; }
+
+    /// <summary>
     /// Filter tasks by project ID.
     /// </summary>
     public string? ProjectId { get; set; }

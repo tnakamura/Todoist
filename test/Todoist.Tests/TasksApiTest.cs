@@ -17,7 +17,7 @@ public class TasksApiTest
             SendDelegate = (r, _) =>
             {
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/tasks",
+                    "https://api.todoist.com/api/v1/tasks",
                     r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Get, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
@@ -98,7 +98,7 @@ public class TasksApiTest
             SendDelegate = (r, _) =>
             {
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/tasks/2995104339",
+                    "https://api.todoist.com/api/v1/tasks/2995104339",
                     r.RequestUri?.AbsoluteUri);
                 Assert.Equal(r.Method, HttpMethod.Get);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
@@ -176,7 +176,7 @@ public class TasksApiTest
             SendDelegate = async (r, _) =>
             {
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/tasks",
+                    "https://api.todoist.com/api/v1/tasks",
                     r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
@@ -261,7 +261,7 @@ public class TasksApiTest
             SendDelegate = async (r, _) =>
             {
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/tasks/2995104339",
+                    "https://api.todoist.com/api/v1/tasks/2995104339",
                     r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
@@ -343,7 +343,7 @@ public class TasksApiTest
             SendDelegate = (r, _) =>
             {
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/tasks/2995104339",
+                    "https://api.todoist.com/api/v1/tasks/2995104339",
                     r.RequestUri?.AbsoluteUri);
                 Assert.Equal(r.Method, HttpMethod.Delete);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
@@ -369,7 +369,7 @@ public class TasksApiTest
             SendDelegate = (r, _) =>
             {
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/tasks/2995104339/close",
+                    "https://api.todoist.com/api/v1/tasks/2995104339/close",
                     r.RequestUri?.AbsoluteUri);
                 Assert.Equal(r.Method, HttpMethod.Post);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
@@ -395,7 +395,7 @@ public class TasksApiTest
             SendDelegate = (r, _) =>
             {
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/tasks/2995104339/reopen",
+                    "https://api.todoist.com/api/v1/tasks/2995104339/reopen",
                     r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
@@ -411,5 +411,104 @@ public class TasksApiTest
         var actual = await client.Tasks.ReopenAsync("2995104339");
 
         Assert.True(actual);
+    }
+
+    [Fact]
+    public async Task QuickAddAsyncTest()
+    {
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = async (r, _) =>
+            {
+                Assert.Equal("https://api.todoist.com/api/v1/tasks/quick", r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Post, r.Method);
+                Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
+                Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
+                var body = await r.Content!.ReadAsStringAsync();
+                Assert.Contains("\"text\":\"Buy Milk tomorrow 9am\"", body);
+                Assert.Contains("\"auto_reminder\":true", body);
+
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(
+                    content: @"{
+    ""creator_id"": ""2671355"",
+    ""created_at"": ""2019-12-11T22:36:50.000000Z"",
+    ""assignee_id"": null,
+    ""assigner_id"": null,
+    ""comment_count"": 0,
+    ""is_completed"": false,
+    ""content"": ""Buy Milk"",
+    ""description"": """",
+    ""due"": null,
+    ""duration"": null,
+    ""id"": ""2995104339"",
+    ""labels"": [],
+    ""order"": 1,
+    ""priority"": 1,
+    ""project_id"": ""2203306141"",
+    ""section_id"": null,
+    ""parent_id"": null,
+    ""url"": ""https://todoist.com/showTask?id=2995104339""
+}",
+                    encoding: Encoding.UTF8,
+                    mediaType: "application/json")
+                };
+                return response;
+            }
+        };
+        var client = new TodoistClient("TestToken", handlerMock);
+
+        var task = await client.Tasks.QuickAddAsync(new Models.QuickAddTaskArgs("Buy Milk tomorrow 9am", autoReminder: true));
+
+        Assert.Equal("2995104339", task.Id);
+        Assert.Equal("Buy Milk", task.Content);
+    }
+
+    [Fact]
+    public async Task GetPageAsyncTest()
+    {
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
+            {
+                Assert.Equal("https://api.todoist.com/api/v1/tasks?cursor=CURSOR1", r.RequestUri?.AbsoluteUri);
+                Assert.Equal(HttpMethod.Get, r.Method);
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Headers.Add("Link", "<https://api.todoist.com/api/v1/tasks?cursor=CURSOR2>; rel=\"next\"");
+                response.Content = new StringContent(
+                    content: @"[
+    {
+        ""creator_id"": ""2671355"",
+        ""created_at"": ""2019-12-11T22:36:50.000000Z"",
+        ""assignee_id"": null,
+        ""assigner_id"": null,
+        ""comment_count"": 0,
+        ""is_completed"": false,
+        ""content"": ""Buy Milk"",
+        ""description"": """",
+        ""due"": null,
+        ""duration"": null,
+        ""id"": ""2995104339"",
+        ""labels"": [],
+        ""order"": 1,
+        ""priority"": 1,
+        ""project_id"": ""2203306141"",
+        ""section_id"": null,
+        ""parent_id"": null,
+        ""url"": ""https://todoist.com/showTask?id=2995104339""
+    }
+]",
+                    encoding: Encoding.UTF8,
+                    mediaType: "application/json");
+                return Task.FromResult(response);
+            }
+        };
+        var client = new TodoistClient("TestToken", handlerMock);
+
+        var page = await client.Tasks.GetPageAsync(cursor: "CURSOR1");
+
+        Assert.Single(page.Items);
+        Assert.Equal("CURSOR2", page.NextCursor);
     }
 }

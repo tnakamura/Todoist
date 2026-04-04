@@ -41,6 +41,18 @@ public partial class TodoistClient : ILabelsClient
             .ConfigureAwait(false);
     }
 
+    async ValueTask<PagedResult<Label>> ILabelsClient.GetPageAsync(string? cursor, CancellationToken cancellationToken)
+    {
+        var query = new Dictionary<string, string?> { ["cursor"] = cursor };
+        var response = await _client.GetAsync(
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_LABELS}",
+            queryParameters: query,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializePageAsync<Label>(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     async ValueTask<Label> ILabelsClient.GetAsync(string id, CancellationToken cancellationToken)
     {
         var response = await _client.GetAsync(

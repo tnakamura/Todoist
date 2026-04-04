@@ -34,21 +34,26 @@ public partial class TodoistClient : ICommentsClient
 
     async ValueTask<IReadOnlyList<Comment>> ICommentsClient.GetAllAsync(GetCommentsArgs args, CancellationToken cancellationToken)
     {
-        var requestUri = $"{GetRestBaseUri()}{ENDPOINT_REST_COMMENTS}";
-
-        var query = HttpUtility.ParseQueryString(string.Empty);
-        if (args.ProjectId != null)
-            query.Add("project_id", args.ProjectId);
-        if (args.TaskId != null)
-            query.Add("task_id", args.TaskId);
-        if (query.HasKeys())
-            requestUri += "?" + query.ToString();
+        var query = BuildQuery(args);
 
         var response = await _client.GetAsync(
-            requestUri: requestUri,
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_COMMENTS}",
+            queryParameters: query,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         return await response.DeserializeAsync<IReadOnlyList<Comment>>(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    async ValueTask<PagedResult<Comment>> ICommentsClient.GetPageAsync(GetCommentsArgs args, CancellationToken cancellationToken)
+    {
+        var query = BuildQuery(args);
+        var response = await _client.GetAsync(
+            requestUri: $"{GetRestBaseUri()}{ENDPOINT_REST_COMMENTS}",
+            queryParameters: query,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return await response.DeserializePageAsync<Comment>(cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -72,5 +77,15 @@ public partial class TodoistClient : ICommentsClient
             .ConfigureAwait(false);
         return await response.DeserializeAsync<Comment>(cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    private static Dictionary<string, string?> BuildQuery(GetCommentsArgs args)
+    {
+        return new Dictionary<string, string?>
+        {
+            ["project_id"] = args.ProjectId,
+            ["task_id"] = args.TaskId,
+            ["cursor"] = args.Cursor,
+        };
     }
 }

@@ -15,7 +15,7 @@ public class LabelsApiTest
         {
             SendDelegate = static (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/labels", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/labels", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(r.Method, HttpMethod.Get);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -49,13 +49,46 @@ public class LabelsApiTest
     }
 
     [Fact]
+    public async Task GetPageAsyncTest()
+    {
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = static (r, _) =>
+            {
+                Assert.Equal("https://api.todoist.com/api/v1/labels?cursor=CURSOR1", r.RequestUri?.AbsoluteUri);
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Headers.Add("Link", "<https://api.todoist.com/api/v1/labels?cursor=CURSOR2>; rel=\"next\"");
+                response.Content = new StringContent(
+                    content: @"[
+    {
+        ""id"": ""2156154810"",
+        ""name"": ""Food"",
+        ""color"": ""charcoal"",
+        ""order"": 1,
+        ""is_favorite"": false
+    }
+]",
+                    encoding: Encoding.UTF8,
+                    mediaType: "application/json");
+                return Task.FromResult(response);
+            }
+        };
+        var client = new TodoistClient("TestToken", handlerMock);
+
+        var page = await client.Labels.GetPageAsync("CURSOR1");
+
+        Assert.Single(page.Items);
+        Assert.Equal("CURSOR2", page.NextCursor);
+    }
+
+    [Fact]
     public async Task GetAsyncTest()
     {
         var handlerMock = new MockHttpMessageHandler
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/labels/2156154810", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/labels/2156154810", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(r.Method, HttpMethod.Get);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -92,7 +125,7 @@ public class LabelsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/labels", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/labels", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -132,7 +165,7 @@ public class LabelsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/labels/2156154810", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/labels/2156154810", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -173,7 +206,7 @@ public class LabelsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/labels/2156154810", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/labels/2156154810", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Delete, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);

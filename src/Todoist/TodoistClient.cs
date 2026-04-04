@@ -45,4 +45,7 @@ public partial class TodoistClient :
 
     /// <inheritdoc/>
     public ICommentsClient Comments => this;
+
+    /// <inheritdoc/>
+    public IRemindersClient Reminders => this;
 }

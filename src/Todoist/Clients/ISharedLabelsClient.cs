@@ -15,6 +15,10 @@ public interface ISharedLabelsClient
     /// </summary>
     ValueTask<IReadOnlyList<string>> GetAllAsync(GetAllSharedLabelsArgs? args = null, CancellationToken cancellationToken = default);
     /// <summary>
+    /// Get shared labels page with next cursor.
+    /// </summary>
+    ValueTask<PagedResult<string>> GetPageAsync(GetAllSharedLabelsArgs? args = null, CancellationToken cancellationToken = default);
+    /// <summary>
     /// Rename shared labels.
     /// </summary>
     ValueTask<bool> RenameAsync(RenameSharedLabelsArgs args, CancellationToken cancellationToken = default);

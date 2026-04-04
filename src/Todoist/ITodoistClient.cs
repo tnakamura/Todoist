@@ -3,7 +3,7 @@
 namespace Todoist;
 
 /// <summary>
-/// Todoist REST API
+/// Todoist API v1
 /// </summary>
 public interface ITodoistClient
 {
@@ -36,4 +36,9 @@ public interface ITodoistClient
     /// Comments
     /// </summary>
     ICommentsClient Comments { get; }
+
+    /// <summary>
+    /// Reminders
+    /// </summary>
+    IRemindersClient Reminders { get; }
 }

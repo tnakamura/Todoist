@@ -19,6 +19,10 @@ public interface IProjectsClient
     /// </summary>
     ValueTask<IReadOnlyList<Project>> GetAllAsync(CancellationToken cancellationToken = default);
     /// <summary>
+    /// Get projects page with next cursor.
+    /// </summary>
+    ValueTask<PagedResult<Project>> GetPageAsync(string? cursor = null, CancellationToken cancellationToken = default);
+    /// <summary>
     /// Create a new project
     /// </summary>
     ValueTask<Project> CreateAsync(CreateProjectArgs args, string? requestId = null, CancellationToken cancellationToken = default);

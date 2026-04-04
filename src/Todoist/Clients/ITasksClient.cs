@@ -20,6 +20,14 @@ public interface ITasksClient
     /// </summary>
     ValueTask<IReadOnlyList<TodoistTask>> GetAllAsync(GetTasksArgs? args = null, CancellationToken cancellationToken = default);
     /// <summary>
+    /// Get active tasks page with next cursor.
+    /// </summary>
+    ValueTask<PagedResult<TodoistTask>> GetPageAsync(GetTasksArgs? args = null, string? cursor = null, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Quick add a new task from natural language text.
+    /// </summary>
+    ValueTask<TodoistTask> QuickAddAsync(QuickAddTaskArgs args, string? requestId = null, CancellationToken cancellationToken = default);
+    /// <summary>
     /// Create a new task
     /// </summary>
     ValueTask<TodoistTask> CreateAsync(CreateTaskArgs args, string? requestId = null, CancellationToken cancellationToken = default);

@@ -52,12 +52,13 @@ public class TokenApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal("https://todoist.com/oauth/access_tokens/revoke", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/revoke", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
+                Assert.Equal("Basic", r.Headers.Authorization?.Scheme);
+                Assert.Equal("MDEyMzQ1Njc4OWFiY2RlZjpzZWNyZXQ=", r.Headers.Authorization?.Parameter);
                 var content = await r.Content!.ReadAsStringAsync();
-                Assert.Contains("client_id=0123456789abcdef", content);
-                Assert.Contains("client_secret=secret", content);
-                Assert.Contains("access_token=0123456789abcdef0123456789abcdef01234567", content);
+                Assert.Contains("token=0123456789abcdef0123456789abcdef01234567", content);
+                Assert.Contains("token_type_hint=access_token", content);
 
                 var response = new HttpResponseMessage(HttpStatusCode.NoContent);
                 return response;

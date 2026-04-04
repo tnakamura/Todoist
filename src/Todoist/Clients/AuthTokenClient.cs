@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Todoist.Clients;
@@ -31,14 +34,16 @@ public partial class TodoistClient : IAuthTokenClient
     {
         var formContent = new FormUrlEncodedContent(new Dictionary<string, string>
         {
-            ["client_id"] = args.ClientId,
-            ["client_secret"] = args.ClientSecret,
-            ["access_token"] = args.AccessToken,
+            ["token"] = args.AccessToken,
+            ["token_type_hint"] = "access_token",
         });
-        var response = await _client.PostAsync(
-            requestUri: $"{GetAuthBaseUri()}{ENDPOINT_REVOKE_TOKEN}",
-            payload: formContent,
-            cancellationToken: cancellationToken)
+        var basicAuthCredentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{args.ClientId}:{args.ClientSecret}"));
+        var request = new HttpRequestMessage(HttpMethod.Post, $"{GetRestBaseUri()}{ENDPOINT_REVOKE_TOKEN}")
+        {
+            Content = formContent
+        };
+        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", basicAuthCredentials);
+        var response = await _client.SendAsync(request, cancellationToken)
             .ConfigureAwait(false);
         return response.IsSuccessStatusCode;
     }

@@ -15,7 +15,7 @@ public class SectionsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/sections?project_id=2203306141", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/sections?project_id=2203306141", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Get, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -47,13 +47,45 @@ public class SectionsApiTest
     }
 
     [Fact]
+    public async Task GetPageAsyncTest()
+    {
+        var handlerMock = new MockHttpMessageHandler
+        {
+            SendDelegate = (r, _) =>
+            {
+                Assert.Equal("https://api.todoist.com/api/v1/sections?project_id=2203306141&cursor=CURSOR1", r.RequestUri?.AbsoluteUri);
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Headers.Add("Link", "<https://api.todoist.com/api/v1/sections?cursor=CURSOR2>; rel=\"next\"");
+                response.Content = new StringContent(
+                    content: @"[
+    {
+        ""id"": ""7025"",
+        ""project_id"": ""2203306141"",
+        ""order"": 1,
+        ""name"": ""Groceries""
+    }
+]",
+                    encoding: Encoding.UTF8,
+                    mediaType: "application/json");
+                return Task.FromResult(response);
+            }
+        };
+        var client = new TodoistClient("TestToken", handlerMock);
+
+        var page = await client.Sections.GetPageAsync(projectId: "2203306141", cursor: "CURSOR1");
+
+        Assert.Single(page.Items);
+        Assert.Equal("CURSOR2", page.NextCursor);
+    }
+
+    [Fact]
     public async Task GetAsyncTest()
     {
         var handlerMock = new MockHttpMessageHandler
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/sections/7025", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/sections/7025", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Get, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -88,7 +120,7 @@ public class SectionsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/sections", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/sections", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -129,7 +161,7 @@ public class SectionsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/sections/7025", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/sections/7025", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -168,7 +200,7 @@ public class SectionsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/sections/7025", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/sections/7025", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Delete, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
