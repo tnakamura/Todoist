@@ -15,7 +15,7 @@ public class ProjectsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/projects", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/projects", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(r.Method, HttpMethod.Get);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -69,7 +69,7 @@ public class ProjectsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/projects/2203306141", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/projects/2203306141", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Get, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -120,7 +120,7 @@ public class ProjectsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/projects/2203306141", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/projects/2203306141", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Delete, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -143,7 +143,7 @@ public class ProjectsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/projects", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/projects", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -197,7 +197,7 @@ public class ProjectsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/projects/2203306141", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/projects/2203306141", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -254,7 +254,7 @@ public class ProjectsApiTest
         {
             SendDelegate = (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/projects/2203306141/collaborators", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/projects/2203306141/collaborators", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Get, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);

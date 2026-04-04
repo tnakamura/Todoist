@@ -15,7 +15,7 @@ public class SharedLabelsApiTest
         {
             SendDelegate = static (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/labels/shared", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/labels/shared", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(r.Method, HttpMethod.Get);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -49,7 +49,7 @@ public class SharedLabelsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/labels/shared/rename", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/labels/shared/rename", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
@@ -76,7 +76,7 @@ public class SharedLabelsApiTest
         {
             SendDelegate = async (r, _) =>
             {
-                Assert.Equal("https://api.todoist.com/rest/v2/labels/shared/remove", r.RequestUri?.AbsoluteUri);
+                Assert.Equal("https://api.todoist.com/api/v1/labels/shared/remove", r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);

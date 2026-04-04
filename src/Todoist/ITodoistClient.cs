@@ -3,7 +3,7 @@
 namespace Todoist;
 
 /// <summary>
-/// Todoist REST API
+/// Todoist API v1
 /// </summary>
 public interface ITodoistClient
 {

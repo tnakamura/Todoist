@@ -1,6 +1,6 @@
 # Todoist API C# Client
 
-This is the unofficial C# API client for the Todoist REST API.
+This is the unofficial C# API client for the Todoist API v1.
 
 
 ## Installation
@@ -26,4 +26,3 @@ foreach (var task in tasks)
     Console.WriteLine(task.Content);
 }
 ```
-

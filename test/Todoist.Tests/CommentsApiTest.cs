@@ -20,7 +20,7 @@ public class CommentsApiTest
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
                 Assert.Equal("TestToken", r.Headers.Authorization?.Parameter);
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/comments?task_id=2995104339",
+                    "https://api.todoist.com/api/v1/comments?task_id=2995104339",
                     r.RequestUri?.AbsoluteUri);
 
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -71,7 +71,7 @@ public class CommentsApiTest
             SendDelegate = (r, _) =>
             {
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/comments/2992679862",
+                    "https://api.todoist.com/api/v1/comments/2992679862",
                     r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Get, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
@@ -123,7 +123,7 @@ public class CommentsApiTest
             SendDelegate = async (r, _) =>
             {
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/comments",
+                    "https://api.todoist.com/api/v1/comments",
                     r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
@@ -192,7 +192,7 @@ public class CommentsApiTest
             SendDelegate = async (r, _) =>
             {
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/comments/2992679862",
+                    "https://api.todoist.com/api/v1/comments/2992679862",
                     r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Post, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);
@@ -246,7 +246,7 @@ public class CommentsApiTest
             SendDelegate = (r, _) =>
             {
                 Assert.Equal(
-                    "https://api.todoist.com/rest/v2/comments/2992679862",
+                    "https://api.todoist.com/api/v1/comments/2992679862",
                     r.RequestUri?.AbsoluteUri);
                 Assert.Equal(HttpMethod.Delete, r.Method);
                 Assert.Equal("Bearer", r.Headers.Authorization?.Scheme);

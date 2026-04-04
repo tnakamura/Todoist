@@ -9,7 +9,7 @@
     <Authors>tnakamura</Authors>
     <Company>tnakamura</Company>
     <AssemblyTitle>Todoist</AssemblyTitle>
-    <Description>Todoist REST API</Description>
+    <Description>Todoist API v1</Description>
     <Copyright>2021 (C) tnakamura</Copyright>
     <RootNamespace>Todoist</RootNamespace>
     <Version>0.1.1</Version>
