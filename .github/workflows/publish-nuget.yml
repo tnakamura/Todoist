@@ -26,7 +26,7 @@ jobs:
         run: dotnet restore Todoist.slnx
 
       - name: Build
-        run: dotnet build Todoist.slnx --configuration Release --no-restore
+        run: dotnet build src/Todoist/Todoist.csproj --configuration Release --no-restore -o ./artifacts/build
 
       - name: Resolve package version
         shell: bash
@@ -35,7 +35,9 @@ jobs:
           echo "PACKAGE_VERSION=$VERSION" >> "$GITHUB_ENV"
 
       - name: Pack NuGet package
-        run: dotnet pack src/Todoist/Todoist.csproj --configuration Release --no-build -p:ContinuousIntegrationBuild=true -p:PackageVersion=${{ env.PACKAGE_VERSION }}
+        run: dotnet pack src/Todoist/Todoist.csproj --configuration Release --no-build -p:OutputPath=./artifacts/build -p:ContinuousIntegrationBuild=true -p:PackageVersion=${{ env.PACKAGE_VERSION }} -o ./artifacts/packages
 
       - name: Publish package to NuGet.org
-        run: dotnet nuget push src/Todoist/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push ./artifacts/packages/Todoist.*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
